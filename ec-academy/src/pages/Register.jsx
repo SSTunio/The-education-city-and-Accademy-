@@ -9,15 +9,33 @@ function Register() {
   const [liveCourses, setLiveCourses] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
-    father_name: '', // Added
-    gender: 'Male',    // Added
-    caste: '',       // Added
+    father_name: '',
+    gender: 'Male',
+    caste: '',
+    education: '',
     contact: '',
     program: 'Weekday',
     course: '',
+    fee_plan: 'Monthly', // New Field
     username: '',
     password: ''
   });
+
+  const getCourseFee = (courseName) => {
+    if (!courseName) return 'Select a course to view fees';
+    const normalized = courseName.toLowerCase();
+    
+    if (normalized.includes('ai') || normalized.includes('intelligence') || normalized.includes('machine learning')) return 'Rs 3,500/mo (Total: Rs 10,500 for 3 months)';
+    if (normalized.includes('hack') || normalized.includes('cyber')) return 'Rs 3,500/mo (Total: Rs 10,500 for 3 months)';
+    if (normalized.includes('web')) return 'Rs 2,000/mo (Total: Rs 6,000 for 3 months)';
+    if (normalized.includes('python')) return 'Rs 2,000/mo (Total: Rs 4,000 for 2 months)';
+    if (normalized.includes('electronic')) return 'Rs 2,000/mo (Total: Rs 5,000 for ~10 weeks)';
+    if (normalized.includes('arduino')) return 'Rs 2,000/mo (Total: Rs 4,000 for 2 months)';
+    if (normalized.includes('computer')) return 'Rs 1,500/mo (Total: Rs 3,000 for 2 months)';
+    if (normalized.includes('english')) return 'Rs 1,500/mo (Total: Rs 3,000 for 2 months)';
+    
+    return 'Rs 2,000/mo (Standard Rate)'; // Fallback
+  };
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -49,16 +67,15 @@ function Register() {
   };
 
   return (
-    <div className="section" style={{ background: 'var(--bg)', minHeight: '100vh', padding: '100px 2rem 80px' }}>
-      <div className="container" style={{ maxWidth: '800px' }}>
-        <div className="glass fade-in" style={{ background: '#fff', borderRadius: '32px', padding: '50px', boxShadow: '0 30px 60px rgba(0,0,0,0.05)' }}>
-          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <img src={logo} alt="Logo" style={{ width: '90px', borderRadius: '12px', marginBottom: '20px' }} />
-            <h2 style={{ fontSize: '2rem', color: 'var(--navy)', fontWeight: '800' }}>Student Enrollment</h2>
+    <div className="section register-section" style={{ background: 'var(--bg)', minHeight: '100vh', padding: 'clamp(80px, 10vw, 120px) clamp(15px, 5vw, 2rem) 80px' }}>
+      <div className="container" style={{ maxWidth: '800px', padding: 0 }}>
+        <div className="glass fade-in register-card" style={{ background: '#fff', borderRadius: '32px', padding: 'clamp(25px, 6vw, 50px)', boxShadow: '0 30px 60px rgba(0,0,0,0.05)' }}>
+          <div style={{ textAlign: 'center', marginBottom: 'clamp(20px, 5vw, 40px)' }}>
+            <img src={logo} alt="Logo" style={{ width: 'clamp(60px, 15vw, 90px)', borderRadius: '12px', marginBottom: '20px' }} />
+            <h2 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', color: 'var(--navy)', fontWeight: '800' }}>Student Enrollment</h2>
           </div>
           
           <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '25px' }}>
-            {/* Row 1: Name and Father Name */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
               <div className="form-group">
                 <label style={{ fontSize: '13px', fontWeight: '700', marginBottom: '8px', display: 'block' }}>Student Name *</label>
@@ -70,7 +87,6 @@ function Register() {
               </div>
             </div>
 
-            {/* Row 2: Gender and Caste */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
               <div className="form-group">
                 <label style={{ fontSize: '13px', fontWeight: '700', marginBottom: '8px', display: 'block' }}>Gender *</label>
@@ -86,12 +102,18 @@ function Register() {
               </div>
             </div>
 
-            {/* Row 3: Contact and Course */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+              <div className="form-group">
+                <label style={{ fontSize: '13px', fontWeight: '700', marginBottom: '8px', display: 'block' }}>Previous Education *</label>
+                <input type="text" name="education" required value={formData.education} onChange={handleChange} style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid var(--border)' }} placeholder="e.g. Intermediate, Matric" />
+              </div>
               <div className="form-group">
                 <label style={{ fontSize: '13px', fontWeight: '700', marginBottom: '8px', display: 'block' }}>Contact Number *</label>
                 <input type="tel" name="contact" required value={formData.contact} onChange={handleChange} style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid var(--border)' }} placeholder="03XX-XXXXXXX" />
               </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
               <div className="form-group">
                 <label style={{ fontSize: '13px', fontWeight: '700', marginBottom: '8px', display: 'block' }}>Desired Course *</label>
                 <select name="course" value={formData.course} onChange={handleChange} style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid var(--border)', background: '#fff' }}>
@@ -100,9 +122,28 @@ function Register() {
                   ))}
                 </select>
               </div>
+              <div className="form-group">
+                <label style={{ fontSize: '13px', fontWeight: '700', marginBottom: '8px', display: 'block' }}>Fee Plan *</label>
+                <select name="fee_plan" value={formData.fee_plan} onChange={handleChange} style={{ width: '100%', padding: '12px', borderRadius: '10px', border: '1px solid var(--border)', background: '#fff' }}>
+                  <option value="Monthly">Monthly Installment</option>
+                  <option value="Full Course">Full Course Payment</option>
+                  <option value="Scholarship">Scholarship / Free</option>
+                </select>
+              </div>
             </div>
 
-            {/* Login Credentials */}
+            {/* Dynamic Fee Display */}
+            <div style={{ background: 'var(--navy)', color: '#fff', padding: '20px', borderRadius: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h4 style={{ fontSize: '13px', color: 'var(--gold)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '1px' }}>Course Investment</h4>
+                <div style={{ fontSize: '18px', fontWeight: '800' }}>{getCourseFee(formData.course)}</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Registration Fee</div>
+                <div style={{ fontSize: '14px', fontWeight: '700' }}>Rs 500 <span style={{fontSize: '10px', fontWeight: 'normal'}}>(One-time)</span></div>
+              </div>
+            </div>
+
             <div style={{ padding: '20px', background: '#f8f9fc', borderRadius: '15px', marginTop: '10px' }}>
               <h4 style={{ marginBottom: '15px', fontSize: '14px', color: 'var(--navy)' }}>🔐 Portal Login Setup</h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
@@ -111,12 +152,28 @@ function Register() {
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="btn btn-primary" style={{ width: '100%', padding: '15px', fontWeight: '800' }}>
-              {loading ? 'Processing...' : 'Complete Enrollment ✓'}
+            <button type="submit" disabled={loading} className="btn btn-primary" style={{ width: '100%', padding: '15px', fontWeight: '800', marginTop: '10px' }}>
+              {loading ? 'Processing...' : 'Complete Enrollment →'}
             </button>
           </form>
         </div>
       </div>
+      
+      <style>{`
+        .register-card .form-group {
+          margin-bottom: 0;
+        }
+        @media (max-width: 600px) {
+          .register-card form > div[style*="display: grid"] {
+            grid-template-columns: 1fr !important;
+            gap: 15px !important;
+          }
+          .register-card input, .register-card select {
+            padding: 14px !important; /* Larger touch targets */
+            font-size: 14px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

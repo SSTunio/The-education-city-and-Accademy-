@@ -26,11 +26,13 @@ export const authService = {
   register: async (studentData) => {
     const res = await supabase.from('registrations').insert({
       student_name: studentData.name,
-      father_name: studentData.father_name, // New Field
-      gender: studentData.gender,           // New Field
-      caste: studentData.caste,             // New Field
+      father_name: studentData.father_name,
+      gender: studentData.gender,
+      caste: studentData.caste,
+      education: studentData.education,     // Restored Field
       course: studentData.course,
       program_type: studentData.program,
+      fee_plan: studentData.fee_plan,       // New Field
       username: studentData.username,
       password: studentData.password,
       status: 'pending',
