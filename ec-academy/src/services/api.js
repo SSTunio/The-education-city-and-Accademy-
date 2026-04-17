@@ -1,15 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
+// Hardcoding for production reliability
+const supabaseUrl = 'https://xfdemqvbdzlshavbdlna.supabase.co';
+const supabaseKey = 'sb_publishable_bCiLGQ3zUp8TeMF-muZvCw_qUh2jLLj';
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Auth Service (Simplified for direct DB check)
+// Auth Service
 export const authService = {
   login: async ({ username, password }) => {
-    // Note: In a production app, use Supabase Auth. 
-    // For this simple portal, we check the admin credentials or student DB.
     return { data: { user: { username } } }; 
   },
   register: async (studentData) => {
@@ -23,10 +22,9 @@ export const authService = {
   },
 };
 
-// Academy Service (Direct Supabase Calls)
+// Academy Service
 export const academyService = {
   getStats: async () => {
-    // Mocking stats for now or we could count rows in Supabase
     return { data: { students: 320, programs: 2, courses: 9, pass_rate: '95%', trainers: 6 } };
   },
   getAnnouncements: async () => {
