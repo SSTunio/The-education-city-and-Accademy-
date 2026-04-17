@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Education City & AI Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#0a1628;--navy2:#0f2044;--gold:#f5a623;--gold2:#ffd166;
+  --teal:#00c9a7;--teal2:#00f5d4;--red:#e63946;
+  --bg:#f8f9fc;--card:#ffffff;--text:#1a1a2e;--muted:#6b7280;
+  --border:#e5e7eb;--font-head:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;
+}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);overflow-x:hidden}
+/* ─── PAGE SYSTEM ─── */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+/* ─── NAV ─── */
+nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.3)}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--teal));border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:800;color:var(--navy);font-size:16px}
+.logo-text{font-family:var(--font-head);color:#fff;font-size:15px;font-weight:700;line-height:1.2}
+.logo-text span{color:var(--gold);display:block;font-size:11px;font-weight:400}
+.nav-links{display:flex;gap:8px;align-items:center}
+.nav-btn{background:none;border:1px solid rgba(255,255,255,.2);color:#fff;padding:7px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-family:var(--font-body);transition:.2s}
+.nav-btn:hover{background:rgba(255,255,255,.1)}
+.nav-btn.primary{background:var(--gold);color:var(--navy);border-color:var(--gold);font-weight:500}
+.nav-btn.primary:hover{background:var(--gold2)}
+/* ─── HERO ─── */
+.hero{background:var(--navy);padding:80px 2rem 60px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(0,201,167,.08),transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(245,166,35,.07),transparent 70%);pointer-events:none}
+.hero-badge{display:inline-block;background:rgba(0,201,167,.15);border:1px solid rgba(0,201,167,.3);color:var(--teal2);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:500;letter-spacing:.5px;margin-bottom:20px}
+.hero h1{font-family:var(--font-head);font-size:clamp(2rem,5vw,3.5rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:16px}
+.hero h1 span{color:var(--gold)}
+.hero-urdu{font-size:1.4rem;color:rgba(255,255,255,.6);margin-bottom:24px;direction:rtl}
+.hero p{color:rgba(255,255,255,.65);font-size:1.05rem;max-width:580px;margin:0 auto 36px;line-height:1.7}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{padding:12px 28px;border-radius:8px;font-family:var(--font-body);font-size:14px;font-weight:500;cursor:pointer;border:none;transition:.2s}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1.5px solid rgba(255,255,255,.35);color:#fff}
+.btn-outline:hover{background:rgba(255,255,255,.08)}
+/* ─── STATS BAR ─── */
+.stats-bar{background:var(--navy2);padding:20px 2rem;display:flex;gap:0;justify-content:center;border-bottom:1px solid rgba(255,255,255,.06)}
+.stat{text-align:center;padding:0 32px;border-right:1px solid rgba(255,255,255,.1)}
+.stat:last-child{border-right:none}
+.stat-num{font-family:var(--font-head);font-size:1.6rem;font-weight:800;color:var(--gold)}
+.stat-label{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;letter-spacing:.5px}
+/* ─── SECTION ─── */
+.section{padding:64px 2rem}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-title{font-family:var(--font-head);font-size:1.9rem;font-weight:700;margin-bottom:8px}
+.section-sub{color:var(--muted);margin-bottom:40px;font-size:.95rem}
+/* ─── PROGRAMS ─── */
+.programs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.prog-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;transition:.2s;cursor:pointer}
+.prog-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.08);border-color:var(--teal)}
+.prog-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:16px;letter-spacing:.5px}
+.badge-weekend{background:#fff3cd;color:#856404}
+.badge-weekday{background:#d1ecf1;color:#0c5460}
+.prog-title{font-family:var(--font-head);font-size:1.1rem;font-weight:700;margin-bottom:6px}
+.prog-meta{font-size:12px;color:var(--muted);margin-bottom:16px}
+.topic-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.topic-list li{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text)}
+.topic-list li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.prog-footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.prog-price{font-family:var(--font-head);font-size:1rem;font-weight:700;color:var(--navy)}
+/* ─── ANNOUNCEMENTS ─── */
+.announce-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.announce-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.announce-img{width:100%;height:160px;object-fit:cover;background:linear-gradient(135deg,var(--navy),var(--navy2));display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.3);font-size:12px}
+.announce-body{padding:16px}
+.announce-tag{font-size:10px;font-weight:600;letter-spacing:.6px;color:var(--teal);text-transform:uppercase;margin-bottom:6px}
+.announce-title{font-weight:600;font-size:14px;margin-bottom:6px}
+.announce-date{font-size:11px;color:var(--muted)}
+/* ─── FORM STYLES ─── */
+.form-page{background:var(--bg);min-height:100vh;padding:40px 1rem}
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;max-width:720px;margin:0 auto;overflow:hidden}
+.form-header{background:var(--navy);padding:32px;text-align:center}
+.form-header h2{font-family:var(--font-head);color:#fff;font-size:1.5rem;font-weight:700}
+.form-header p{color:rgba(255,255,255,.5);font-size:13px;margin-top:6px}
+.form-body{padding:32px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-row.single{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:13px;font-weight:500;color:var(--text)}
+.form-group input,.form-group select,.form-group textarea{padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:14px;color:var(--text);background:#fff;outline:none;transition:.2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,201,167,.1)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-submit{width:100%;padding:14px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-family:var(--font-head);font-size:15px;font-weight:600;cursor:pointer;transition:.2s;margin-top:8px}
+.form-submit:hover{background:var(--navy2);transform:translateY(-1px)}
+.section-divider{font-family:var(--font-head);font-size:13px;font-weight:600;color:var(--muted);margin:24px 0 16px;padding-bottom:8px;border-bottom:1.5px solid var(--border);letter-spacing:.5px;text-transform:uppercase}
+/* ─── PORTAL ─── */
+.portal-layout{display:flex;min-height:100vh}
+.sidebar{width:220px;background:var(--navy);display:flex;flex-direction:column;position:fixed;height:100vh;z-index:50}
+.sidebar-logo{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-logo .logo-text{font-size:13px}
+.sidebar-nav{padding:16px 8px;flex:1;overflow-y:auto}
+.sidebar-section{font-size:10px;letter-spacing:.8px;color:rgba(255,255,255,.3);font-weight:600;padding:8px 8px 4px;text-transform:uppercase;margin-top:12px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;color:rgba(255,255,255,.6);font-size:13px;transition:.15s;margin-bottom:2px}
+.sidebar-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.sidebar-item.active{background:rgba(0,201,167,.15);color:var(--teal2)}
+.sidebar-item .icon{width:18px;text-align:center;font-size:15px}
+.sidebar-bottom{padding:16px;border-top:1px solid rgba(255,255,255,.08)}
+.portal-content{margin-left:220px;flex:1;padding:28px;background:var(--bg);min-height:100vh}
+.portal-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.portal-title{font-family:var(--font-head);font-size:1.4rem;font-weight:700}
+.portal-user{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--teal));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--navy)}
+/* ─── DASHBOARD CARDS ─── */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px}
+.metric-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
+.metric-icon{font-size:22px;margin-bottom:8px}
+.metric-val{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--navy)}
+.metric-label{font-size:11px;color:var(--muted);margin-top:2px}
+.metric-delta{font-size:11px;color:#16a34a;margin-top:4px}
+/* ─── TABLE ─── */
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.data-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.data-table tr:hover td{background:#f9fafb}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-green{background:#dcfce7;color:#15803d}
+.badge-yellow{background:#fef9c3;color:#854d0e}
+.badge-blue{background:#dbeafe;color:#1d4ed8}
+.badge-red{background:#fee2e2;color:#b91c1c}
+/* ─── CARD CONTAINER ─── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.card-title{font-family:var(--font-head);font-size:1rem;font-weight:600}
+/* ─── MODAL ─── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:28px;width:min(520px,90vw);max-height:85vh;overflow-y:auto}
+.modal h3{font-family:var(--font-head);font-size:1.1rem;margin-bottom:20px}
+/* ─── LOGIN ─── */
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--navy);padding:20px}
+.login-card{background:#fff;border-radius:16px;padding:40px;width:min(400px,100%);text-align:center}
+.login-logo-area{margin-bottom:28px}
+.login-logo-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--gold),var(--teal));border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:800;color:var(--navy);font-size:22px;margin:0 auto 12px}
+.login-card h2{font-family:var(--font-head);font-size:1.4rem;font-weight:700;margin-bottom:4px}
+.login-card p{color:var(--muted);font-size:13px;margin-bottom:28px}
+.login-tabs{display:flex;gap:8px;margin-bottom:24px;background:#f3f4f6;border-radius:8px;padding:4px}
+.login-tab{flex:1;padding:8px;border:none;background:none;border-radius:6px;cursor:pointer;font-size:13px;color:var(--muted);font-family:var(--font-body);transition:.2s}
+.login-tab.active{background:#fff;color:var(--navy);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+/* ─── RESULTS ─── */
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:12px}
+.result-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.result-subject{font-weight:600;font-size:14px}
+.grade-circle{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:700;font-size:1rem}
+.grade-A{background:#dcfce7;color:#15803d}
+.grade-B{background:#dbeafe;color:#1d4ed8}
+.grade-C{background:#fef9c3;color:#854d0e}
+.grade-F{background:#fee2e2;color:#b91c1c}
+.progress-bar{background:#e5e7eb;border-radius:4px;height:6px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--teal),var(--teal2));transition:width .6s}
+/* ─── ADMIN ADD FORM ─── */
+.admin-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.small-btn{padding:8px 16px;border-radius:6px;font-size:12px;font-family:var(--font-body);cursor:pointer;font-weight:500;border:none;transition:.15s}
+.btn-teal{background:var(--teal);color:#fff}
+.btn-teal:hover{opacity:.85}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{opacity:.85}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-ghost:hover{background:#f3f4f6}
+/* ─── TOAST ─── */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;z-index:999;transform:translateY(20px);opacity:0;transition:.3s;pointer-events:none}
+#toast.show{transform:translateY(0);opacity:1}
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .form-row{grid-template-columns:1fr}
+  .portal-layout{flex-direction:column}
+  .sidebar{width:100%;height:auto;position:relative}
+  .portal-content{margin-left:0}
+  .stats-bar{flex-wrap:wrap}
+  .stat{padding:12px 16px;border-right:none;border-bottom:1px solid rgba(255,255,255,.07)}
+  .admin-form-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════ LANDING PAGE ════════════════════ -->
+<div id="page-home" class="page active">
+  <nav>
+    <div class="logo" onclick="showPage('page-home')">
+      <div class="logo-icon">EC</div>
+      <div class="logo-text">Education City <span>& AI Academy</span></div>
+    </div>
+    <div class="nav-links">
+      <button class="nav-btn" onclick="scrollTo('#programs')">Programs</button>
+      <button class="nav-btn" onclick="scrollTo('#announce')">News</button>
+      <button class="nav-btn" onclick="showPage('page-login')">Student Login</button>
+      <button class="nav-btn primary" onclick="showPage('page-register')">Register Now</button>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge">✦ Admissions Open — 2026 Batch</div>
+    <h1>Education City &<br/><span>AI Academy</span></h1>
+    <div class="hero-urdu">ایجوکیشن سٹی اور اے آئی اکیڈمی میں خوش آمدید</div>
+    <p>Pakistan's premier technology learning center for middle school to matriculation students — from basic computing to Artificial Intelligence.</p>
+    <div class="hero-btns">
+      <button class="btn btn-gold" onclick="showPage('page-register')">Apply for Admission</button>
+      <button class="btn btn-outline" onclick="scrollTo('#programs')">View Programs</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num" id="s-students">320+</div><div class="stat-label">Students Enrolled</div></div>
+    <div class="stat"><div class="stat-num">2</div><div class="stat-label">Programs</div></div>
+    <div class="stat"><div class="stat-num">7</div><div class="stat-label">Courses</div></div>
+    <div class="stat"><div class="stat-num">95%</div><div class="stat-label">Pass Rate</div></div>
+    <div class="stat"><div class="stat-num">5+</div><div class="stat-label">Expert Trainers</div></div>
+  </div>
+
+  <!-- Programs -->
+  <div class="section" id="programs" style="background:#fff">
+    <div class="section-inner">
+      <div class="section-title">Our Programs</div>
+      <div class="section-sub">ہمارے کورسز — Designed for the next generation of tech leaders</div>
+      <div class="programs-grid">
+        <!-- Weekend -->
+        <div class="prog-card">
+          <div class="prog-badge badge-weekend">📅 Weekend Program</div>
+          <div class="prog-title">Basic Technology & Electronics</div>
+          <div class="prog-meta">Saturday & Sunday · Morning Sessions · Grade 6–10</div>
+          <ul class="topic-list">
+            <li>Basic Computer Skills</li>
+            <li>Basic Electronics</li>
+            <li>Introductory Arduino Programming</li>
+          </ul>
+          <div class="prog-footer">
+            <span class="prog-price">Weekend Batch</span>
+            <button class="btn btn-gold" style="padding:8px 18px;font-size:13px" onclick="showPage('page-register')">Enroll</button>
+          </div>
+        </div>
+        <!-- Weekday -->
+        <div class="prog-card">
+          <div class="prog-badge badge-weekday">💻 Weekday Program</div>
+          <div class="prog-title">Coding, AI & Cybersecurity</div>
+          <div class="prog-meta">5-Day Session · Afternoon Batches · All Levels</div>
+          <ul class="topic-list">
+            <li>Web Development (HTML, CSS, JS)</li>
+            <li>Python Coding – Basics</li>
+            <li>Python for AI & Machine Learning</li>
+            <li>Ethical Hacking</li>
+          </ul>
+          <div class="prog-footer">
+            <span class="prog-price">Weekday Batch</span>
+            <button class="btn btn-gold" style="padding:8px 18px;font-size:13px" onclick="showPage('page-register')">Enroll</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Announcements -->
+  <div class="section" id="announce">
+    <div class="section-inner">
+      <div class="section-title">Announcements & News</div>
+      <div class="section-sub">تازہ خبریں — Latest updates from the academy</div>
+      <div class="announce-grid" id="home-announcements">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="background:var(--navy);color:rgba(255,255,255,.4);text-align:center;padding:24px;font-size:12px">
+    © 2026 Education City & AI Academy · All rights reserved · ایجوکیشن سٹی اکیڈمی
+  </div>
+</div>
+
+<!-- ════════════════════ REGISTER PAGE ════════════════════ -->
+<div id="page-register" class="page">
+  <nav>
+    <div class="logo" onclick="showPage('page-home')">
+      <div class="logo-icon">EC</div>
+      <div class="logo-text">Education City <span>& AI Academy</span></div>
+    </div>
+    <div class="nav-links">
+      <button class="nav-btn" onclick="showPage('page-home')">← Back to Home</button>
+      <button class="nav-btn" onclick="showPage('page-login')">Student Login</button>
+    </div>
+  </nav>
+  <div class="form-page">
+    <div class="form-card">
+      <div class="form-header">
+        <h2>Student Registration Form</h2>
+        <p>طالب علم کا اندراج فارم — Fill all required fields</p>
+      </div>
+      <div class="form-body">
+        <div class="section-divider">Personal Information — ذاتی معلومات</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name (English) *</label>
+            <input type="text" id="r-name" placeholder="Muhammad Ali Khan"/>
+          </div>
+          <div class="form-group">
+            <label>نام (اردو) *</label>
+            <input type="text" id="r-name-ur" placeholder="محمد علی خان" style="direction:rtl"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Date of Birth *</label>
+            <input type="date" id="r-dob"/>
+          </div>
+          <div class="form-group">
+            <label>Gender / جنس *</label>
+            <select id="r-gender">
+              <option value="">Select...</option>
+              <option>Male / مرد</option>
+              <option>Female / عورت</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>CNIC / B-Form # *</label>
+            <input type="text" id="r-cnic" placeholder="42101-1234567-1"/>
+          </div>
+          <div class="form-group">
+            <label>Class / Grade *</label>
+            <select id="r-class">
+              <option value="">Select Class...</option>
+              <option>6th Grade</option><option>7th Grade</option><option>8th Grade</option>
+              <option>9th Grade</option><option>Matriculation (10th)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group">
+            <label>Home Address / گھر کا پتہ *</label>
+            <textarea id="r-address" placeholder="House #, Street, City..."></textarea>
+          </div>
+        </div>
+
+        <div class="section-divider">Guardian Information — والدین / سرپرست</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Father/Guardian Name *</label>
+            <input type="text" id="r-father" placeholder="Guardian full name"/>
+          </div>
+          <div class="form-group">
+            <label>Contact Number *</label>
+            <input type="tel" id="r-phone" placeholder="03XX-XXXXXXX"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="r-email" placeholder="guardian@email.com"/>
+          </div>
+          <div class="form-group">
+            <label>WhatsApp Number</label>
+            <input type="tel" id="r-whatsapp" placeholder="03XX-XXXXXXX"/>
+          </div>
+        </div>
+
+        <div class="section-divider">Course Selection — کورس کا انتخاب</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Program Type *</label>
+            <select id="r-program" onchange="updateCourses()">
+              <option value="">Select Program...</option>
+              <option value="weekend">Weekend Program (Sat & Sun)</option>
+              <option value="weekday">Weekday Program (5-Day)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Course *</label>
+            <select id="r-course">
+              <option value="">Select course first...</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Preferred Batch Time</label>
+            <select id="r-batch">
+              <option>Morning (9:00 AM – 12:00 PM)</option>
+              <option>Afternoon (2:00 PM – 5:00 PM)</option>
+              <option>Evening (5:00 PM – 8:00 PM)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>How did you hear about us?</label>
+            <select id="r-source">
+              <option>Social Media</option>
+              <option>Friend/Family Referral</option>
+              <option>Pamphlet / Banner</option>
+              <option>Walk-in</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section-divider">Login Credentials — لاگ ان</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Create Username *</label>
+            <input type="text" id="r-username" placeholder="student_ali123"/>
+          </div>
+          <div class="form-group">
+            <label>Create Password *</label>
+            <input type="password" id="r-password" placeholder="Min 6 characters"/>
+          </div>
+        </div>
+
+        <button class="form-submit" onclick="submitRegistration()">Submit Registration — اندراج مکمل کریں ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ LOGIN PAGE ════════════════════ -->
+<div id="page-login" class="page">
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-logo-area">
+        <div class="login-logo-icon">EC</div>
+        <h2>Education City</h2>
+        <p>AI Academy — Student & Admin Portal</p>
+      </div>
+      <div class="login-tabs">
+        <button class="login-tab active" id="tab-student" onclick="switchLoginTab('student')">Student Portal</button>
+        <button class="login-tab" id="tab-admin" onclick="switchLoginTab('admin')">Admin Portal</button>
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Username / Email</label>
+        <input type="text" id="l-user" placeholder="Enter username"/>
+      </div>
+      <div class="form-group" style="margin-bottom:20px">
+        <label>Password</label>
+        <input type="password" id="l-pass" placeholder="Enter password"/>
+      </div>
+      <button class="form-submit" id="login-btn" onclick="doLogin()">Login →</button>
+      <p style="font-size:12px;color:var(--muted);margin-top:16px">Not enrolled? <a href="#" onclick="showPage('page-register')" style="color:var(--teal);text-decoration:none">Register here</a></p>
+      <p style="font-size:11px;color:#aaa;margin-top:6px">Demo: admin/admin123 · student/student123</p>
+      <button class="nav-btn" style="margin-top:16px;width:100%;color:var(--muted)" onclick="showPage('page-home')">← Back to Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ STUDENT PORTAL ════════════════════ -->
+<div id="page-student" class="page">
+  <div class="portal-layout">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo">
+          <div class="logo-icon" style="width:30px;height:30px;font-size:12px">EC</div>
+          <div class="logo-text" style="font-size:12px">Education City <span>Student Portal</span></div>
+        </div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <div class="sidebar-item active" onclick="showPortalSection('s-dashboard')"><span class="icon">🏠</span> Dashboard</div>
+        <div class="sidebar-item" onclick="showPortalSection('s-courses')"><span class="icon">📚</span> My Courses</div>
+        <div class="sidebar-item" onclick="showPortalSection('s-results')"><span class="icon">📊</span> Results</div>
+        <div class="sidebar-section">Academy</div>
+        <div class="sidebar-item" onclick="showPortalSection('s-announce')"><span class="icon">📢</span> Announcements</div>
+        <div class="sidebar-item" onclick="showPortalSection('s-schedule')"><span class="icon">🗓️</span> Schedule</div>
+        <div class="sidebar-item" onclick="showPortalSection('s-profile')"><span class="icon">👤</span> My Profile</div>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="sidebar-item" onclick="showPage('page-login')"><span class="icon">🚪</span> Logout</div>
+      </div>
+    </div>
+    <div class="portal-content">
+      <div class="portal-topbar">
+        <div class="portal-title" id="s-page-title">Dashboard</div>
+        <div class="portal-user">
+          <span id="s-username-display">Ahmad Ali</span>
+          <div class="avatar" id="s-avatar">AA</div>
+        </div>
+      </div>
+
+      <!-- Student: Dashboard -->
+      <div id="s-dashboard">
+        <div class="metrics">
+          <div class="metric-card"><div class="metric-icon">📚</div><div class="metric-val">2</div><div class="metric-label">Courses Enrolled</div></div>
+          <div class="metric-card"><div class="metric-icon">✅</div><div class="metric-val">78%</div><div class="metric-label">Attendance</div></div>
+          <div class="metric-card"><div class="metric-icon">🏆</div><div class="metric-val">B+</div><div class="metric-label">Overall Grade</div></div>
+          <div class="metric-card"><div class="metric-icon">📅</div><div class="metric-val">3</div><div class="metric-label">Upcoming Tests</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Recent Announcements</div></div>
+          <div id="s-announce-preview"></div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="card-header"><div class="card-title">Today's Schedule</div></div>
+          <table class="data-table">
+            <thead><tr><th>Time</th><th>Subject</th><th>Trainer</th><th>Room</th></tr></thead>
+            <tbody>
+              <tr><td>9:00 AM</td><td>Python Basics</td><td>Sir Kamran</td><td>Lab A</td></tr>
+              <tr><td>11:00 AM</td><td>Web Development</td><td>Ma'am Sana</td><td>Lab B</td></tr>
+              <tr><td>2:00 PM</td><td>Arduino Programming</td><td>Sir Bilal</td><td>Lab C</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Student: Courses -->
+      <div id="s-courses" style="display:none">
+        <div class="card">
+          <div class="card-header"><div class="card-title">My Enrolled Courses</div></div>
+          <div style="display:grid;gap:14px">
+            <div style="border:1px solid var(--border);border-radius:10px;padding:16px">
+              <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+                <div><div style="font-weight:600;font-size:14px">Python for AI & Machine Learning</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Weekday · Afternoon Batch · Sir Kamran</div></div>
+                <span class="badge badge-green">Active</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Progress: 60%</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+            </div>
+            <div style="border:1px solid var(--border);border-radius:10px;padding:16px">
+              <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+                <div><div style="font-weight:600;font-size:14px">Web Development</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Weekday · Morning Batch · Ma'am Sana</div></div>
+                <span class="badge badge-green">Active</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Progress: 45%</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:45%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Student: Results -->
+      <div id="s-results" style="display:none">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Academic Results</div></div>
+          <div id="student-results-list"></div>
+        </div>
+      </div>
+
+      <!-- Student: Announcements -->
+      <div id="s-announce" style="display:none">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Announcements — اعلانات</div></div>
+          <div id="s-announce-full"></div>
+        </div>
+      </div>
+
+      <!-- Student: Schedule -->
+      <div id="s-schedule" style="display:none">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Weekly Schedule</div></div>
+          <table class="data-table">
+            <thead><tr><th>Day</th><th>Time</th><th>Subject</th><th>Trainer</th></tr></thead>
+            <tbody>
+              <tr><td>Monday</td><td>9 AM–12 PM</td><td>Python Basics</td><td>Sir Kamran</td></tr>
+              <tr><td>Tuesday</td><td>9 AM–12 PM</td><td>Web Development</td><td>Ma'am Sana</td></tr>
+              <tr><td>Wednesday</td><td>9 AM–12 PM</td><td>Python AI/ML</td><td>Sir Kamran</td></tr>
+              <tr><td>Thursday</td><td>9 AM–12 PM</td><td>Ethical Hacking</td><td>Sir Zain</td></tr>
+              <tr><td>Saturday</td><td>9 AM–12 PM</td><td>Basic Electronics</td><td>Sir Bilal</td></tr>
+              <tr><td>Sunday</td><td>9 AM–12 PM</td><td>Arduino Programming</td><td>Sir Bilal</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Student: Profile -->
+      <div id="s-profile" style="display:none">
+        <div class="card" style="max-width:500px">
+          <div class="card-header"><div class="card-title">My Profile</div></div>
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+            <div class="avatar" style="width:56px;height:56px;font-size:18px" id="s-big-avatar">AA</div>
+            <div>
+              <div style="font-weight:600;font-size:16px" id="s-profile-name">Ahmad Ali</div>
+              <div style="font-size:12px;color:var(--muted)">Student ID: ECA-2026-001</div>
+              <span class="badge badge-green">Enrolled</span>
+            </div>
+          </div>
+          <table class="data-table">
+            <tr><td style="color:var(--muted);font-size:12px">Program</td><td>Weekday — AI & Python</td></tr>
+            <tr><td style="color:var(--muted);font-size:12px">Class</td><td>9th Grade</td></tr>
+            <tr><td style="color:var(--muted);font-size:12px">Batch</td><td>Morning</td></tr>
+            <tr><td style="color:var(--muted);font-size:12px">Admitted</td><td>Jan 2026</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ ADMIN PORTAL ════════════════════ -->
+<div id="page-admin" class="page">
+  <div class="portal-layout">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo">
+          <div class="logo-icon" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,var(--gold),#ff6b35)">A</div>
+          <div class="logo-text" style="font-size:12px">Education City <span>Admin Panel</span></div>
+        </div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="sidebar-section">Overview</div>
+        <div class="sidebar-item active" onclick="showAdminSection('a-dashboard')"><span class="icon">📊</span> Dashboard</div>
+        <div class="sidebar-section">Management</div>
+        <div class="sidebar-item" onclick="showAdminSection('a-students')"><span class="icon">👥</span> Students</div>
+        <div class="sidebar-item" onclick="showAdminSection('a-registrations')"><span class="icon">📋</span> Registrations</div>
+        <div class="sidebar-item" onclick="showAdminSection('a-courses')"><span class="icon">📚</span> Courses</div>
+        <div class="sidebar-item" onclick="showAdminSection('a-results')"><span class="icon">📝</span> Results</div>
+        <div class="sidebar-section">Content</div>
+        <div class="sidebar-item" onclick="showAdminSection('a-announce')"><span class="icon">📢</span> Announcements</div>
+        <div class="sidebar-item" onclick="showAdminSection('a-posters')"><span class="icon">🖼️</span> Posters</div>
+        <div class="sidebar-section">Settings</div>
+        <div class="sidebar-item" onclick="showAdminSection('a-settings')"><span class="icon">⚙️</span> Settings</div>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="sidebar-item" onclick="showPage('page-login')"><span class="icon">🚪</span> Logout</div>
+      </div>
+    </div>
+    <div class="portal-content">
+      <div class="portal-topbar">
+        <div class="portal-title" id="a-page-title">Admin Dashboard</div>
+        <div class="portal-user">
+          <span>Administrator</span>
+          <div class="avatar" style="background:linear-gradient(135deg,var(--gold),#ff6b35)">AD</div>
+        </div>
+      </div>
+
+      <!-- Admin: Dashboard -->
+      <div id="a-dashboard">
+        <div class="metrics">
+          <div class="metric-card"><div class="metric-icon">👥</div><div class="metric-val" id="a-total-students">0</div><div class="metric-label">Total Students</div><div class="metric-delta">+12 this month</div></div>
+          <div class="metric-card"><div class="metric-icon">📋</div><div class="metric-val" id="a-pending">0</div><div class="metric-label">Pending Approvals</div></div>
+          <div class="metric-card"><div class="metric-icon">📚</div><div class="metric-val">7</div><div class="metric-label">Active Courses</div></div>
+          <div class="metric-card"><div class="metric-icon">📢</div><div class="metric-val" id="a-announce-count">0</div><div class="metric-label">Announcements</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Recent Registrations</div><button class="small-btn btn-teal" onclick="showAdminSection('a-registrations')">View All</button></div>
+            <div id="a-recent-regs"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Students by Course</div></div>
+            <div id="a-course-stats"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin: Students -->
+      <div id="a-students" style="display:none">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">All Students</div>
+            <div style="display:flex;gap:8px">
+              <input type="text" placeholder="Search student..." style="padding:7px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:200px" oninput="filterStudents(this.value)"/>
+              <button class="small-btn btn-teal" onclick="openModal('modal-add-student')">+ Add Student</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table" id="students-table">
+              <thead><tr><th>ID</th><th>Name</th><th>Program</th><th>Course</th><th>Batch</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody id="students-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin: Registrations -->
+      <div id="a-registrations" style="display:none">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Registration Requests</div></div>
+          <table class="data-table">
+            <thead><tr><th>Name</th><th>Course</th><th>Program</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="reg-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Admin: Courses -->
+      <div id="a-courses" style="display:none">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Manage Courses</div><button class="small-btn btn-teal" onclick="openModal('modal-add-course')">+ Add Course</button></div>
+          <table class="data-table">
+            <thead><tr><th>Course Name</th><th>Program</th><th>Trainer</th><th>Students</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="courses-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Admin: Results -->
+      <div id="a-results" style="display:none">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Manage Results</div><button class="small-btn btn-teal" onclick="openModal('modal-add-result')">+ Add Result</button></div>
+          <table class="data-table">
+            <thead><tr><th>Student</th><th>Course</th><th>Score</th><th>Grade</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="results-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Admin: Announcements -->
+      <div id="a-announce" style="display:none">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Manage Announcements</div><button class="small-btn btn-teal" onclick="openModal('modal-add-announce')">+ New Announcement</button></div>
+          <div id="admin-announce-list"></div>
+        </div>
+      </div>
+
+      <!-- Admin: Posters -->
+      <div id="a-posters" style="display:none">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Announcement Posters</div><button class="small-btn btn-teal" onclick="openModal('modal-add-poster')">+ Create Poster</button></div>
+          <div id="admin-poster-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:8px"></div>
+        </div>
+      </div>
+
+      <!-- Admin: Settings -->
+      <div id="a-settings" style="display:none">
+        <div class="card" style="max-width:560px">
+          <div class="card-header"><div class="card-title">Academy Settings</div></div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="form-group"><label>Academy Name</label><input type="text" value="Education City & AI Academy"/></div>
+            <div class="form-group"><label>Contact Number</label><input type="tel" value="0300-1234567"/></div>
+            <div class="form-group"><label>Email</label><input type="email" value="info@educationcity.pk"/></div>
+            <div class="form-group"><label>Address</label><textarea>Main Road, Education City, Pakistan</textarea></div>
+            <div class="form-group"><label>WhatsApp Group Link</label><input type="text" placeholder="https://chat.whatsapp.com/..."/></div>
+            <button class="form-submit" style="width:auto;padding:10px 24px" onclick="showToast('Settings saved successfully!')">Save Settings</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ MODALS ════════════════════ -->
+<!-- Add Student -->
+<div class="modal-overlay" id="modal-add-student">
+  <div class="modal">
+    <h3>Add New Student</h3>
+    <div class="admin-form-grid">
+      <div class="form-group"><label>Full Name</label><input type="text" id="m-name"/></div>
+      <div class="form-group"><label>Class</label><select id="m-class"><option>6th</option><option>7th</option><option>8th</option><option>9th</option><option>10th</option></select></div>
+      <div class="form-group"><label>Program</label><select id="m-prog"><option>Weekend</option><option>Weekday</option></select></div>
+      <div class="form-group"><label>Course</label><input type="text" id="m-course"/></div>
+      <div class="form-group"><label>Contact</label><input type="tel" id="m-contact"/></div>
+      <div class="form-group"><label>Status</label><select id="m-status"><option>Active</option><option>Pending</option><option>Suspended</option></select></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="small-btn btn-teal" onclick="addStudent()">Add Student</button>
+      <button class="small-btn btn-ghost" onclick="closeModal('modal-add-student')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Course -->
+<div class="modal-overlay" id="modal-add-course">
+  <div class="modal">
+    <h3>Add New Course</h3>
+    <div class="admin-form-grid">
+      <div class="form-group"><label>Course Name</label><input type="text" id="c-name"/></div>
+      <div class="form-group"><label>Program</label><select id="c-prog"><option>Weekend</option><option>Weekday</option></select></div>
+      <div class="form-group"><label>Trainer Name</label><input type="text" id="c-trainer"/></div>
+      <div class="form-group"><label>Duration</label><input type="text" id="c-dur" placeholder="e.g. 2 months"/></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="small-btn btn-teal" onclick="addCourse()">Add Course</button>
+      <button class="small-btn btn-ghost" onclick="closeModal('modal-add-course')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Result -->
+<div class="modal-overlay" id="modal-add-result">
+  <div class="modal">
+    <h3>Add Student Result</h3>
+    <div class="admin-form-grid">
+      <div class="form-group"><label>Student Name</label><input type="text" id="res-student"/></div>
+      <div class="form-group"><label>Course</label><input type="text" id="res-course"/></div>
+      <div class="form-group"><label>Score (%)</label><input type="number" id="res-score" min="0" max="100"/></div>
+      <div class="form-group"><label>Grade</label><select id="res-grade"><option>A+</option><option>A</option><option>B+</option><option>B</option><option>C</option><option>F</option></select></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="small-btn btn-teal" onclick="addResult()">Save Result</button>
+      <button class="small-btn btn-ghost" onclick="closeModal('modal-add-result')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Announcement -->
+<div class="modal-overlay" id="modal-add-announce">
+  <div class="modal">
+    <h3>New Announcement</h3>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="form-group"><label>Title</label><input type="text" id="an-title" placeholder="Announcement title"/></div>
+      <div class="form-group"><label>Category</label><select id="an-cat"><option>General</option><option>Admission</option><option>Result</option><option>Holiday</option><option>Event</option></select></div>
+      <div class="form-group"><label>Content</label><textarea id="an-content" style="min-height:100px" placeholder="Write announcement..."></textarea></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="small-btn btn-teal" onclick="addAnnouncement()">Publish</button>
+      <button class="small-btn btn-ghost" onclick="closeModal('modal-add-announce')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Poster -->
+<div class="modal-overlay" id="modal-add-poster">
+  <div class="modal">
+    <h3>Create Announcement Poster</h3>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="form-group"><label>Poster Title</label><input type="text" id="p-title" placeholder="e.g. New Batch Starting!"/></div>
+      <div class="form-group"><label>Date</label><input type="text" id="p-date" placeholder="Jan 15, 2026"/></div>
+      <div class="form-group"><label>Background Color</label><select id="p-color"><option value="var(--navy)">Dark Blue (Navy)</option><option value="#1a472a">Forest Green</option><option value="#7c3aed">Purple</option><option value="#b45309">Amber</option><option value="#be123c">Crimson</option></select></div>
+      <div class="form-group"><label>Details</label><textarea id="p-detail" placeholder="Short description..."></textarea></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="small-btn btn-teal" onclick="addPoster()">Create Poster</button>
+      <button class="small-btn btn-ghost" onclick="closeModal('modal-add-poster')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// ─── GLOBAL STATE ───
+const state={
+  students:[
+    {id:'ECA-001',name:'Ahmad Ali',program:'Weekday',course:'Python AI/ML',batch:'Morning',status:'Active',contact:'0312-1234567'},
+    {id:'ECA-002',name:'Sara Khan',program:'Weekend',course:'Arduino Programming',batch:'Morning',status:'Active',contact:'0333-7654321'},
+    {id:'ECA-003',name:'Bilal Ahmed',program:'Weekday',course:'Web Development',batch:'Afternoon',status:'Pending',contact:'0345-9876543'},
+    {id:'ECA-004',name:'Zara Hussain',program:'Weekday',course:'Ethical Hacking',batch:'Evening',status:'Active',contact:'0321-5551234'},
+  ],
+  registrations:[
+    {name:'Usman Tariq',course:'Python Basics',program:'Weekday',date:'2026-01-10',status:'pending'},
+    {name:'Hina Iqbal',course:'Basic Electronics',program:'Weekend',date:'2026-01-11',status:'pending'},
+    {name:'Farhan Malik',course:'Web Development',program:'Weekday',date:'2026-01-12',status:'approved'},
+  ],
+  courses:[
+    {name:'Basic Computer Skills',program:'Weekend',trainer:'Sir Kamran',students:28,status:'Active'},
+    {name:'Basic Electronics',program:'Weekend',trainer:'Sir Bilal',students:22,status:'Active'},
+    {name:'Arduino Programming',program:'Weekend',trainer:'Sir Bilal',students:18,status:'Active'},
+    {name:'Web Development',program:'Weekday',trainer:"Ma'am Sana",students:35,status:'Active'},
+    {name:'Python Basics',program:'Weekday',trainer:'Sir Kamran',students:30,status:'Active'},
+    {name:'Python AI/ML',program:'Weekday',trainer:'Sir Kamran',students:25,status:'Active'},
+    {name:'Ethical Hacking',program:'Weekday',trainer:'Sir Zain',students:20,status:'Active'},
+  ],
+  results:[
+    {student:'Ahmad Ali',course:'Python Basics',score:88,grade:'B+',status:'Published'},
+    {student:'Ahmad Ali',course:'Web Development',score:72,grade:'B',status:'Published'},
+    {student:'Sara Khan',course:'Arduino',score:95,grade:'A+',status:'Published'},
+  ],
+  announcements:[
+    {title:'New Batch Starting January 15',category:'Admission',content:'We are excited to announce a new batch starting on January 15th. Seats are limited — register now!',date:'Jan 5, 2026'},
+    {title:'Holiday Notice — Republic Day',category:'Holiday',content:'Academy will remain closed on March 23rd. Classes will resume on March 25th.',date:'Mar 20, 2026'},
+    {title:'Python AI Results Published',category:'Result',content:'Results for the Python AI & ML module test are now available on the student portal.',date:'Jan 20, 2026'},
+  ],
+  posters:[],
+  loginType:'student',
+};
+
+// ─── PAGE NAVIGATION ───
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ─── COURSE DROPDOWN ───
+function updateCourses(){
+  const p=document.getElementById('r-program').value;
+  const c=document.getElementById('r-course');
+  const opts={
+    weekend:['Basic Computer Skills','Basic Electronics','Introductory Arduino Programming'],
+    weekday:['Web Development','Python Coding (Basics)','Python for AI & Machine Learning','Ethical Hacking']
+  };
+  c.innerHTML='<option value="">Select course...</option>';
+  (opts[p]||[]).forEach(o=>c.innerHTML+=`<option>${o}</option>`);
+}
+
+// ─── REGISTRATION SUBMIT ───
+function submitRegistration(){
+  const name=document.getElementById('r-name').value;
+  const prog=document.getElementById('r-program').value;
+  const course=document.getElementById('r-course').value;
+  if(!name||!prog||!course){showToast('Please fill all required fields!');return;}
+  const id='ECA-'+String(state.students.length+100).padStart(3,'0');
+  state.students.push({id,name,program:prog==='weekend'?'Weekend':'Weekday',course,batch:document.getElementById('r-batch').value,status:'Pending',contact:document.getElementById('r-phone').value});
+  state.registrations.push({name,course,program:prog==='weekend'?'Weekend':'Weekday',date:new Date().toISOString().split('T')[0],status:'pending'});
+  showToast('Registration submitted! ID: '+id);
+  setTimeout(()=>showPage('page-login'),1800);
+}
+
+// ─── LOGIN ───
+let loginTarget='student';
+function switchLoginTab(t){
+  loginTarget=t;
+  document.getElementById('tab-student').classList.toggle('active',t==='student');
+  document.getElementById('tab-admin').classList.toggle('active',t==='admin');
+}
+function doLogin(){
+  const u=document.getElementById('l-user').value;
+  const p=document.getElementById('l-pass').value;
+  if(loginTarget==='admin'&&u==='admin'&&p==='admin123'){
+    renderAdmin();showPage('page-admin');
+  } else if(loginTarget==='student'&&u==='student'&&p==='student123'){
+    renderStudent('Ahmad Ali');showPage('page-student');
+  } else if(loginTarget==='student'){
+    const found=state.students.find(s=>s.name.toLowerCase().replace(' ','')===u.toLowerCase());
+    if(found){renderStudent(found.name);showPage('page-student');}
+    else showToast('Invalid credentials. Try admin/admin123');
+  } else showToast('Invalid credentials. Try admin/admin123');
+}
+
+// ─── STUDENT PORTAL ───
+function renderStudent(name){
+  const initials=name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('s-username-display').textContent=name;
+  document.getElementById('s-avatar').textContent=initials;
+  document.getElementById('s-big-avatar').textContent=initials;
+  document.getElementById('s-profile-name').textContent=name;
+  renderStudentResults();
+  renderStudentAnnouncements();
+}
+function showPortalSection(id){
+  ['s-dashboard','s-courses','s-results','s-announce','s-schedule','s-profile'].forEach(s=>{
+    document.getElementById(s).style.display='none';
+  });
+  document.getElementById(id).style.display='block';
+  const titles={
+    's-dashboard':'Dashboard','s-courses':'My Courses','s-results':'Results',
+    's-announce':'Announcements','s-schedule':'Schedule','s-profile':'My Profile'
+  };
+  document.getElementById('s-page-title').textContent=titles[id]||'';
+  document.querySelectorAll('#page-student .sidebar-item').forEach((el,i)=>{
+    el.classList.toggle('active',el.getAttribute('onclick')===`showPortalSection('${id}')`);
+  });
+}
+function renderStudentResults(){
+  const html=state.results.map(r=>{
+    const g=r.grade.replace('+','');
+    return`<div class="result-card"><div class="result-header"><div class="result-subject">${r.course}</div><div class="grade-circle grade-${g.charAt(0)}">${r.grade}</div></div><div style="font-size:12px;color:var(--muted)">Score: ${r.score}%</div><div class="progress-bar"><div class="progress-fill" style="width:${r.score}%"></div></div></div>`;
+  }).join('');
+  document.getElementById('student-results-list').innerHTML=html;
+}
+function renderStudentAnnouncements(){
+  const items=state.announcements.slice(0,3).map(a=>`<div style="padding:12px 0;border-bottom:1px solid var(--border)"><div style="font-size:11px;color:var(--teal);font-weight:600;margin-bottom:2px">${a.category.toUpperCase()}</div><div style="font-weight:500;font-size:13px">${a.title}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${a.date}</div></div>`).join('');
+  const full=state.announcements.map(a=>`<div style="padding:14px;border:1px solid var(--border);border-radius:10px;margin-bottom:10px"><div style="font-size:11px;color:var(--teal);font-weight:600;margin-bottom:4px">${a.category.toUpperCase()} · ${a.date}</div><div style="font-weight:600;font-size:14px;margin-bottom:6px">${a.title}</div><div style="font-size:13px;color:var(--muted)">${a.content}</div></div>`).join('');
+  if(document.getElementById('s-announce-preview')) document.getElementById('s-announce-preview').innerHTML=items;
+  if(document.getElementById('s-announce-full')) document.getElementById('s-announce-full').innerHTML=full;
+}
+
+// ─── ADMIN PORTAL ───
+function renderAdmin(){
+  document.getElementById('a-total-students').textContent=state.students.length;
+  document.getElementById('a-pending').textContent=state.registrations.filter(r=>r.status==='pending').length;
+  document.getElementById('a-announce-count').textContent=state.announcements.length;
+  renderStudentsTable();
+  renderRegistrationsTable();
+  renderCoursesTable();
+  renderResultsTable();
+  renderAnnouncementsList();
+  renderPostersList();
+  renderRecentRegs();
+  renderCourseStats();
+  renderHomeAnnouncements();
+}
+function showAdminSection(id){
+  ['a-dashboard','a-students','a-registrations','a-courses','a-results','a-announce','a-posters','a-settings'].forEach(s=>{
+    document.getElementById(s).style.display='none';
+  });
+  document.getElementById(id).style.display='block';
+  const titles={'a-dashboard':'Admin Dashboard','a-students':'Manage Students','a-registrations':'Registrations',
+    'a-courses':'Manage Courses','a-results':'Results','a-announce':'Announcements','a-posters':'Posters','a-settings':'Settings'};
+  document.getElementById('a-page-title').textContent=titles[id]||'';
+  document.querySelectorAll('#page-admin .sidebar-item').forEach(el=>{
+    el.classList.toggle('active',el.getAttribute('onclick')===`showAdminSection('${id}')`);
+  });
+}
+function renderStudentsTable(filter=''){
+  const filtered=state.students.filter(s=>s.name.toLowerCase().includes(filter.toLowerCase())||s.id.includes(filter));
+  document.getElementById('students-tbody').innerHTML=filtered.map((s,i)=>`
+    <tr>
+      <td><code style="font-size:11px">${s.id}</code></td>
+      <td style="font-weight:500">${s.name}</td>
+      <td>${s.program}</td>
+      <td>${s.course}</td>
+      <td>${s.batch||'Morning'}</td>
+      <td><span class="badge badge-${s.status==='Active'?'green':s.status==='Pending'?'yellow':'red'}">${s.status}</span></td>
+      <td><button class="small-btn btn-danger" onclick="removeStudent(${i})">Remove</button></td>
+    </tr>`).join('');
+}
+function filterStudents(v){renderStudentsTable(v)}
+function removeStudent(i){state.students.splice(i,1);renderStudentsTable();document.getElementById('a-total-students').textContent=state.students.length;showToast('Student removed');}
+function addStudent(){
+  const name=document.getElementById('m-name').value;
+  if(!name){showToast('Name required');return;}
+  state.students.push({id:'ECA-'+String(state.students.length+100).padStart(3,'0'),name,program:document.getElementById('m-prog').value,course:document.getElementById('m-course').value,batch:'Morning',status:document.getElementById('m-status').value,contact:document.getElementById('m-contact').value});
+  document.getElementById('a-total-students').textContent=state.students.length;
+  renderStudentsTable();closeModal('modal-add-student');showToast('Student added!');
+}
+function renderRegistrationsTable(){
+  document.getElementById('reg-tbody').innerHTML=state.registrations.map((r,i)=>`
+    <tr>
+      <td style="font-weight:500">${r.name}</td>
+      <td>${r.course}</td>
+      <td>${r.program}</td>
+      <td>${r.date}</td>
+      <td><span class="badge badge-${r.status==='approved'?'green':'yellow'}">${r.status}</span></td>
+      <td style="display:flex;gap:6px">
+        ${r.status==='pending'?`<button class="small-btn btn-teal" onclick="approveReg(${i})">Approve</button>`:''}
+        <button class="small-btn btn-danger" onclick="deleteReg(${i})">Delete</button>
+      </td>
+    </tr>`).join('');
+}
+function approveReg(i){
+  state.registrations[i].status='approved';
+  renderRegistrationsTable();
+  document.getElementById('a-pending').textContent=state.registrations.filter(r=>r.status==='pending').length;
+  showToast('Registration approved!');
+}
+function deleteReg(i){state.registrations.splice(i,1);renderRegistrationsTable();showToast('Registration deleted');}
+function renderCoursesTable(){
+  document.getElementById('courses-tbody').innerHTML=state.courses.map((c,i)=>`
+    <tr>
+      <td style="font-weight:500">${c.name}</td>
+      <td>${c.program}</td>
+      <td>${c.trainer}</td>
+      <td>${c.students}</td>
+      <td><span class="badge badge-green">${c.status}</span></td>
+      <td><button class="small-btn btn-danger" onclick="removeCourse(${i})">Remove</button></td>
+    </tr>`).join('');
+}
+function addCourse(){
+  const name=document.getElementById('c-name').value;
+  if(!name){showToast('Course name required');return;}
+  state.courses.push({name,program:document.getElementById('c-prog').value,trainer:document.getElementById('c-trainer').value,duration:document.getElementById('c-dur').value,students:0,status:'Active'});
+  renderCoursesTable();closeModal('modal-add-course');showToast('Course added!');
+}
+function removeCourse(i){state.courses.splice(i,1);renderCoursesTable();showToast('Course removed');}
+function renderResultsTable(){
+  document.getElementById('results-tbody').innerHTML=state.results.map((r,i)=>`
+    <tr>
+      <td>${r.student}</td>
+      <td>${r.course}</td>
+      <td>${r.score}%</td>
+      <td><span class="badge badge-${r.grade.startsWith('A')?'green':'blue'}">${r.grade}</span></td>
+      <td><span class="badge badge-green">${r.status}</span></td>
+      <td><button class="small-btn btn-danger" onclick="removeResult(${i})">Delete</button></td>
+    </tr>`).join('');
+}
+function addResult(){
+  state.results.push({student:document.getElementById('res-student').value,course:document.getElementById('res-course').value,score:parseInt(document.getElementById('res-score').value),grade:document.getElementById('res-grade').value,status:'Published'});
+  renderResultsTable();closeModal('modal-add-result');showToast('Result added!');
+}
+function removeResult(i){state.results.splice(i,1);renderResultsTable();showToast('Result deleted');}
+function renderAnnouncementsList(){
+  document.getElementById('admin-announce-list').innerHTML=state.announcements.map((a,i)=>`
+    <div style="padding:16px;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:start">
+      <div><div style="font-size:11px;color:var(--teal);font-weight:600;margin-bottom:3px">${a.category.toUpperCase()} · ${a.date}</div><div style="font-weight:600;font-size:14px;margin-bottom:4px">${a.title}</div><div style="font-size:13px;color:var(--muted)">${a.content}</div></div>
+      <button class="small-btn btn-danger" onclick="deleteAnnouncement(${i})">Delete</button>
+    </div>`).join('');
+}
+function addAnnouncement(){
+  const title=document.getElementById('an-title').value;
+  if(!title){showToast('Title required');return;}
+  state.announcements.unshift({title,category:document.getElementById('an-cat').value,content:document.getElementById('an-content').value,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});
+  renderAnnouncementsList();renderHomeAnnouncements();renderStudentAnnouncements();
+  document.getElementById('a-announce-count').textContent=state.announcements.length;
+  closeModal('modal-add-announce');showToast('Announcement published!');
+}
+function deleteAnnouncement(i){state.announcements.splice(i,1);renderAnnouncementsList();renderHomeAnnouncements();showToast('Deleted');}
+function renderPostersList(){
+  document.getElementById('admin-poster-list').innerHTML=state.posters.map((p,i)=>`
+    <div style="background:${p.color};border-radius:12px;padding:20px;color:#fff;position:relative">
+      <div style="font-size:10px;opacity:.6;margin-bottom:8px">EDUCATION CITY · AI ACADEMY</div>
+      <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;margin-bottom:6px">${p.title}</div>
+      <div style="font-size:12px;opacity:.8;margin-bottom:8px">${p.detail}</div>
+      <div style="font-size:11px;opacity:.6">${p.date}</div>
+      <button class="small-btn btn-danger" style="position:absolute;top:8px;right:8px;padding:4px 8px" onclick="removePoster(${i})">✕</button>
+    </div>`).join('');
+}
+function addPoster(){
+  const title=document.getElementById('p-title').value;
+  if(!title){showToast('Title required');return;}
+  state.posters.push({title,date:document.getElementById('p-date').value,color:document.getElementById('p-color').value,detail:document.getElementById('p-detail').value});
+  renderPostersList();closeModal('modal-add-poster');showToast('Poster created!');
+}
+function removePoster(i){state.posters.splice(i,1);renderPostersList();}
+function renderRecentRegs(){
+  document.getElementById('a-recent-regs').innerHTML=state.registrations.slice(0,4).map(r=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px;font-weight:500">${r.name}<div style="font-size:11px;color:var(--muted)">${r.course}</div></div>
+      <span class="badge badge-${r.status==='approved'?'green':'yellow'}">${r.status}</span>
+    </div>`).join('');
+}
+function renderCourseStats(){
+  document.getElementById('a-course-stats').innerHTML=state.courses.map(c=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:12px">${c.name}</div>
+      <div style="font-size:12px;font-weight:600;color:var(--navy)">${c.students}</div>
+    </div>`).join('');
+}
+function renderHomeAnnouncements(){
+  const el=document.getElementById('home-announcements');
+  if(!el) return;
+  el.innerHTML=state.announcements.slice(0,3).map(a=>`
+    <div class="announce-card">
+      <div class="announce-img" style="background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px">EDUCATION CITY</div>
+        <div style="font-family:var(--font-head);color:var(--gold);font-size:1rem;font-weight:700;text-align:center;padding:0 10px">${a.title}</div>
+      </div>
+      <div class="announce-body">
+        <div class="announce-tag">${a.category}</div>
+        <div class="announce-title">${a.title}</div>
+        <div class="announce-date">${a.date}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── MODAL ───
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+
+// ─── TOAST ───
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ─── SCROLL ───
+function scrollTo(hash){
+  showPage('page-home');
+  setTimeout(()=>{const el=document.querySelector(hash);if(el)el.scrollIntoView({behavior:'smooth'})},100);
+}
+
+// ─── INIT ───
+renderHomeAnnouncements();
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+INFO:     Started server process [13837]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:45256 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45256 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:43618 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43618 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52790 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52790 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49234 - "GET /api/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49234 - "GET /api/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46942 - "GET /api/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46942 - "GET /api/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37904 - "GET /api/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37904 - "GET /api/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60320 - "GET /api/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60320 - "GET /api/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43480 - "GET /api/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43480 - "GET /api/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47982 - "GET /api/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47982 - "GET /api/courses HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:35804 - "GET /api/courses HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:35804 - "GET /api/courses HTTP/1.1" 404 Not Found
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [13837]
