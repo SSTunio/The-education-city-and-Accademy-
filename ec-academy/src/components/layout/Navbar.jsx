@@ -1,103 +1,109 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useApp } from '../../context/AppContext';
 import logo from '../../assets/logo.jpg';
 
 function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { user, logout } = useApp();
+  const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    setMobileMenuOpen(false);
+  };
+
+  const navLinks = [
+    { label: 'Home', path: '/' },
+    { label: 'Programs', path: '/#programs' },
+    { label: 'Location', path: '/#location' },
+  ];
 
   return (
-    <nav className="glass-dark" style={{
-      height: 'var(--nav-height)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '0 2rem',
-      position: 'sticky',
-      top: 0,
-      zIndex: 1000
+    <nav className="navbar" style={{ 
+      background: 'rgba(255, 255, 255, 0.95)', 
+      backdropFilter: 'blur(10px)', 
+      padding: '12px 0', 
+      position: 'sticky', 
+      top: 0, 
+      zIndex: 1000, 
+      borderBottom: '1px solid var(--border)' 
     }}>
-      <Link to="/" className="logo" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <img 
-          src={logo} 
-          alt="Education City Logo" 
-          style={{ 
-            height: '45px', 
-            width: 'auto', 
-            borderRadius: '8px',
-            objectFit: 'contain'
-          }} 
-        />
-        <div className="logo-text" style={{ lineHeight: '1.2' }}>
-          <div style={{ color: '#fff', fontSize: '16px', fontWeight: '700' }}>Education City</div>
-          <div style={{ color: 'var(--gold)', fontSize: '11px' }}>& AI Academy</div>
-        </div>
-      </Link>
-      
-      {/* Hamburger Button for Mobile */}
-      <button 
-        className="mobile-toggle" 
-        onClick={toggleMenu}
-        style={{ 
-          display: 'none', 
-          flexDirection: 'column', 
-          gap: '5px',
-          padding: '5px',
-          zIndex: 1100
-        }}
-      >
-        <span style={{ width: '25px', height: '3px', background: '#fff', borderRadius: '3px', transition: '0.3s' }}></span>
-        <span style={{ width: '25px', height: '3px', background: '#fff', borderRadius: '3px', transition: '0.3s' }}></span>
-        <span style={{ width: '25px', height: '3px', background: '#fff', borderRadius: '3px', transition: '0.3s' }}></span>
-      </button>
+      <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        {/* Logo Section */}
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+          <img src={logo} alt="EC Academy" style={{ width: '40px', height: '40px', borderRadius: '10px' }} />
+          <div>
+            <div style={{ fontWeight: '800', color: 'var(--navy)', fontSize: '1.1rem', lineHeight: '1' }}>EC Academy</div>
+            <div style={{ fontSize: '9px', color: 'var(--teal)', fontWeight: '700', letterSpacing: '1px', textTransform: 'uppercase' }}>Education City</div>
+          </div>
+        </Link>
 
-      {/* Navigation Links */}
-      <div className={`nav-links ${isOpen ? 'active' : ''}`} style={{ 
-        display: 'flex', 
-        gap: '24px', 
-        alignItems: 'center',
-        transition: '0.3s ease'
-      }}>
-        <Link to="/" onClick={() => setIsOpen(false)} style={{ color: '#fff', fontSize: '14px' }}>Home</Link>
-        <Link to="/#programs" onClick={() => setIsOpen(false)} style={{ color: '#fff', fontSize: '14px' }}>Programs</Link>
-        <a href="#location" onClick={() => setIsOpen(false)} style={{ color: '#fff', fontSize: '14px', textDecoration: 'none' }}>Location</a>
-        <Link to="/login" onClick={() => setIsOpen(false)} className="btn btn-outline" style={{ color: '#fff', padding: '8px 16px', fontSize: '13px' }}>Student Login</Link>
-        <Link to="/register" onClick={() => setIsOpen(false)} className="btn btn-primary" style={{ padding: '8px 20px', fontSize: '13px' }}>Register Now</Link>
+        {/* Desktop Links */}
+        <div className="desktop-menu" style={{ display: 'flex', gap: '25px', alignItems: 'center' }}>
+          {navLinks.map((link, i) => (
+            <a key={i} href={link.path} className="nav-link" style={{ fontSize: '14px', fontWeight: '600' }}>{link.label}</a>
+          ))}
+          
+          {user?.role === 'admin' && (
+            <Link to="/admin" className="nav-link" style={{ color: 'var(--teal)', fontWeight: '800', fontSize: '14px' }}>Admin</Link>
+          )}
+
+          {user ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--navy)' }}>{user.name}</span>
+              <button onClick={handleLogout} className="btn btn-outline" style={{ padding: '6px 12px', fontSize: '11px' }}>Logout</button>
+            </div>
+          ) : (
+            <Link to="/login" className="btn btn-primary" style={{ padding: '8px 20px', fontSize: '13px' }}>Login</Link>
+          )}
+        </div>
+
+        {/* Mobile Toggle Button */}
+        <button 
+          className="mobile-toggle"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          style={{ display: 'none', fontSize: '24px', color: 'var(--navy)' }}
+        >
+          {mobileMenuOpen ? '✕' : '☰'}
+        </button>
       </div>
 
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="mobile-menu-overlay" style={{
+          position: 'fixed',
+          top: '65px',
+          left: 0,
+          width: '100%',
+          background: '#fff',
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '15px',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+          zIndex: 999,
+          borderBottom: '4px solid var(--gold)'
+        }}>
+          {navLinks.map((link, i) => (
+            <a key={i} href={link.path} onClick={() => setMobileMenuOpen(false)} style={{ padding: '12px', fontWeight: '700', color: 'var(--navy)', borderBottom: '1px solid #f0f0f0' }}>{link.label}</a>
+          ))}
+          {user?.role === 'admin' && (
+            <Link to="/admin" onClick={() => setMobileMenuOpen(false)} style={{ padding: '12px', fontWeight: '800', color: 'var(--teal)' }}>Admin Dashboard</Link>
+          )}
+          {user ? (
+            <button onClick={handleLogout} className="btn btn-outline" style={{ width: '100%', padding: '15px' }}>Logout ({user.name})</button>
+          ) : (
+            <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="btn btn-primary" style={{ width: '100%', padding: '15px' }}>Sign In</Link>
+          )}
+        </div>
+      )}
+
       <style>{`
-        @media (max-width: 768px) {
-          .mobile-toggle {
-            display: flex !important;
-          }
-
-          .logo-text {
-            display: none;
-          }
-
-          .nav-links {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            height: 100vh;
-            background: var(--navy);
-            flex-direction: column;
-            justify-content: center;
-            padding: 40px;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
-          }
-
-          .nav-links.active {
-            right: 0;
-          }
-
-          .nav-links a, .nav-links .btn {
-            width: 100%;
-            text-align: center;
-            font-size: 1.2rem !important;
-          }
+        @media (max-width: 850px) {
+          .desktop-menu { display: none !important; }
+          .mobile-toggle { display: block !important; }
         }
       `}</style>
     </nav>

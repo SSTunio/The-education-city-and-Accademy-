@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import { supabase, academyService } from '../services/api';
 import logo from '../assets/logo.jpg';
 
-const CourseProgressCard = ({ title, progress, instructor, grade, status }) => (
+const CourseProgressCard = ({ title, instructor, status, program }) => (
   <div className="fade-in" style={{
     background: '#fff',
     padding: '24px',
@@ -12,190 +13,188 @@ const CourseProgressCard = ({ title, progress, instructor, grade, status }) => (
     boxShadow: '0 4px 20px rgba(0,0,0,0.02)',
     marginBottom: '20px'
   }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
       <div>
-        <h4 style={{ fontSize: '1.1rem', color: 'var(--navy)', marginBottom: '4px' }}>{title}</h4>
-        <p style={{ fontSize: '12px', color: 'var(--muted)' }}>Instructor: {instructor}</p>
+        <h4 style={{ fontSize: '1.2rem', color: 'var(--navy)', marginBottom: '4px' }}>{title}</h4>
+        <p style={{ fontSize: '13px', color: 'var(--muted)' }}>Track: {program}</p>
       </div>
       <span style={{
         padding: '5px 12px',
         borderRadius: '20px',
         fontSize: '11px',
-        fontWeight: '700',
-        background: status === 'Active' ? '#dcfce7' : '#f1f1f1',
-        color: status === 'Active' ? '#15803d' : '#666'
-      }}>{status}</span>
+        fontWeight: '800',
+        textTransform: 'uppercase',
+        background: status === 'approved' ? '#dcfce7' : '#fef9c3',
+        color: status === 'approved' ? '#15803d' : '#854d0e'
+      }}>{status === 'approved' ? 'Active Student' : 'Admission Pending'}</span>
     </div>
     
-    <div style={{ marginBottom: '16px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '8px' }}>
-        <span style={{ fontWeight: '600' }}>Progress</span>
-        <span style={{ fontWeight: '700', color: 'var(--teal)' }}>{progress}%</span>
+    <div style={{ paddingTop: '16px', borderTop: '1px solid #f8f8f8', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ fontSize: '13px', color: 'var(--navy)', fontWeight: '600' }}>
+        {status === 'approved' ? '✅ Enrolled' : '⏳ Processing Application'}
       </div>
-      <div style={{ background: '#f0f0f0', height: '8px', borderRadius: '10px', overflow: 'hidden' }}>
-        <div style={{ background: 'linear-gradient(90deg, var(--teal), var(--teal-light))', width: `${progress}%`, height: '100%', borderRadius: '10px' }}></div>
-      </div>
-    </div>
-
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '16px', borderTop: '1px solid #f8f8f8' }}>
-      <div style={{ fontSize: '13px' }}>Grade: <span style={{ fontWeight: '800', color: 'var(--gold)' }}>{grade}</span></div>
-      <button style={{ color: 'var(--teal)', fontSize: '13px', fontWeight: '700' }}>View →</button>
+      <button style={{ color: 'var(--teal)', fontSize: '13px', fontWeight: '800' }}>Access LMS →</button>
     </div>
   </div>
 );
 
-const StudentDashboard = () => (
-  <div className="fade-in">
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(150px, 45%, 200px), 1fr))', gap: '20px', marginBottom: '40px' }}>
-      <div style={{ background: 'var(--navy)', padding: '24px', borderRadius: '24px', color: '#fff' }}>
-        <div style={{ fontSize: '24px', marginBottom: '12px' }}>📚</div>
-        <div style={{ fontSize: '1.8rem', fontWeight: '800' }}>2</div>
-        <div style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.4)', textTransform: 'uppercase', letterSpacing: '1px' }}>Courses</div>
-      </div>
-      <div style={{ background: '#fff', padding: '24px', borderRadius: '24px', border: '1px solid var(--border)' }}>
-        <div style={{ fontSize: '24px', marginBottom: '12px' }}>✅</div>
-        <div style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--navy)' }}>88%</div>
-        <div style={{ fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Attendance</div>
-      </div>
-    </div>
+const StudentDashboard = () => {
+  const { user } = useApp();
+  const [studentData, setStudentData] = useState(null);
+  const [announcements, setAnnouncements] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '30px' }}>
-      <div>
-        <h3 style={{ marginBottom: '24px', fontSize: '1.4rem' }}>My Tracks</h3>
-        <CourseProgressCard title="Python AI" progress={72} instructor="Sir Kamran" grade="A-" status="Active" />
+  useEffect(() => {
+    const fetchPortalData = async () => {
+      setLoading(true);
+      // 1. Fetch Student Info
+      const { data: reg } = await supabase
+        .from('registrations')
+        .select('*')
+        .eq('username', user?.username)
+        .maybeSingle();
+      
+      setStudentData(reg);
+
+      // 2. Fetch Live Announcements
+      const { data: ann } = await academyService.getAnnouncements();
+      setAnnouncements(ann || []);
+      
+      setLoading(false);
+    };
+
+    if (user?.username) fetchPortalData();
+  }, [user]);
+
+  if (loading) return <div style={{ padding: '40px', textAlign: 'center' }}>🔄 Syncing with Academy Database...</div>;
+
+  return (
+    <div className="fade-in">
+      {/* Welcome Message */}
+      <div className="glass" style={{ background: 'var(--navy)', padding: '30px', borderRadius: '24px', color: '#fff', marginBottom: '40px', position: 'relative', overflow: 'hidden' }}>
+        <h2 style={{ fontSize: '1.8rem', position: 'relative', zIndex: 1 }}>Welcome back, {studentData?.student_name || user?.name}! 👋</h2>
+        <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px' }}>Your current application status is: <strong style={{ color: 'var(--gold)' }}>{studentData?.status?.toUpperCase() || 'PENDING'}</strong></p>
       </div>
 
-      <div>
-        <div className="glass" style={{ background: '#fff', padding: '30px', borderRadius: '24px', border: '1px solid var(--border)' }}>
-          <h3 style={{ marginBottom: '20px', fontSize: '1.2rem' }}>Next Class</h3>
-          <div style={{ borderLeft: '4px solid var(--gold)', paddingLeft: '16px' }}>
-             <div style={{ fontWeight: '700', color: 'var(--navy)' }}>Python AI Module 4</div>
-             <div style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '4px' }}>Today • 02:00 PM</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 450px), 1fr))', gap: '30px' }}>
+        {/* Enrolled Courses */}
+        <div>
+          <h3 style={{ marginBottom: '20px' }}>My Active Track</h3>
+          {studentData ? (
+            <CourseProgressCard 
+              title={studentData.course} 
+              program={studentData.program_type}
+              status={studentData.status}
+              instructor="Assigned on Start"
+            />
+          ) : (
+            <p style={{ color: 'var(--muted)' }}>No active enrollments found.</p>
+          )}
+        </div>
+
+        {/* Live Announcements */}
+        <div>
+          <h3 style={{ marginBottom: '20px' }}>Academy Updates</h3>
+          <div className="glass" style={{ background: '#fff', padding: '24px', borderRadius: '24px', border: '1px solid var(--border)' }}>
+            {announcements.length > 0 ? announcements.map(ann => (
+              <div key={ann.id} style={{ marginBottom: '15px', paddingBottom: '15px', borderBottom: '1px solid #f0f0f0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '10px', background: 'var(--gold)', color: 'var(--navy)', padding: '2px 8px', borderRadius: '4px', fontWeight: '900' }}>{ann.tag}</span>
+                  <strong style={{ fontSize: '14px' }}>{ann.title}</strong>
+                </div>
+                <p style={{ fontSize: '13px', color: 'var(--muted)' }}>{ann.content}</p>
+              </div>
+            )) : <p style={{ fontSize: '13px', color: 'var(--muted)' }}>No current updates.</p>}
           </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 function StudentPortal() {
+  const { user } = useApp();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Initials for Avatar
+  const getInitials = (name) => {
+    if (!name) return 'ST';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
   return (
-    <div className="portal-layout" style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', position: 'relative' }}>
-      {/* Mobile Toggle Button */}
-      <button 
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        style={{
-          position: 'fixed',
-          bottom: '24px',
-          right: '24px',
-          width: '56px',
-          height: '56px',
-          borderRadius: '50%',
-          background: 'var(--navy)',
-          color: '#fff',
-          zIndex: 1001,
-          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-          display: 'none', // Managed by media query below
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '24px'
-        }}
-        className="sidebar-toggle"
-      >
-        {sidebarOpen ? '✕' : '☰'}
-      </button>
+    <div className="portal-layout" style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)' }}>
+      {/* Sidebar Overlay */}
+      {sidebarOpen && (
+        <div onClick={() => setSidebarOpen(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', zIndex: 998 }}></div>
+      )}
 
       {/* Sidebar */}
-      <aside 
-        className={sidebarOpen ? 'sidebar-active' : ''}
-        style={{
-          width: 'var(--sidebar-width)',
-          background: 'var(--navy)',
-          color: '#fff',
-          padding: '40px 16px',
-          position: 'fixed',
-          height: '100vh',
-          zIndex: 1000,
-          transition: 'transform 0.3s ease',
-          boxShadow: '10px 0 30px rgba(0,0,0,0.1)'
-        }}
-      >
-        <div style={{ marginBottom: '48px', padding: '0 20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-            <img 
-              src={logo} 
-              alt="EC Logo" 
-              style={{ width: '40px', height: '40px', borderRadius: '8px' }} 
-            />
-            <h3 style={{ color: '#fff', fontSize: '1.2rem' }}>Student Hub</h3>
-          </div>
+      <aside style={{ 
+        width: '260px', background: 'var(--navy)', color: '#fff', padding: '40px 16px', position: 'fixed', height: '100vh', zIndex: 999,
+        left: 0, transition: 'transform 0.3s ease', transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)'
+      }} className="student-sidebar">
+        <div style={{ marginBottom: '48px', padding: '0 20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <img src={logo} alt="Logo" style={{ width: '35px', borderRadius: '8px' }} />
+          <h3 style={{ fontSize: '1rem' }}>Student Hub</h3>
         </div>
-        
-        <nav style={{ display: 'grid', gap: '10px' }}>
+        <nav style={{ display: 'grid', gap: '8px' }}>
           {[
             { label: 'Dashboard', icon: '🏠', path: '' },
             { label: 'Courses', icon: '📚', path: 'courses' },
             { label: 'Results', icon: '📊', path: 'results' },
-            { label: 'Schedule', icon: '🗓️', path: 'schedule' },
-            { label: 'Profile', icon: '👤', path: 'profile' }
+            { label: 'Schedule', icon: '🗓️', path: 'schedule' }
           ].map((item, i) => {
-            const fullPath = `/student/${item.path}`;
-            const isActive = location.pathname === fullPath || (item.path === '' && location.pathname === '/student');
+            const path = `/student/${item.path}`;
+            const isActive = location.pathname === path || (item.path === '' && location.pathname === '/student');
             return (
-              <Link key={i} to={fullPath} onClick={() => setSidebarOpen(false)} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '14px',
-                padding: '14px 20px',
-                borderRadius: '14px',
-                fontSize: '14px',
-                color: isActive ? 'var(--gold)' : 'rgba(255, 255, 255, 0.6)',
-                background: isActive ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
-                fontWeight: isActive ? '700' : '500'
+              <Link key={i} to={path} onClick={() => setSidebarOpen(false)} style={{ 
+                color: isActive ? 'var(--gold)' : 'rgba(255,255,255,0.6)', 
+                padding: '12px 20px', textDecoration: 'none', borderRadius: '12px', fontSize: '14px',
+                background: isActive ? 'rgba(255,255,255,0.05)' : 'transparent', fontWeight: isActive ? '800' : '500',
+                display: 'flex', alignItems: 'center', gap: '12px'
               }}>
-                <span>{item.icon}</span>
-                {item.label}
+                <span>{item.icon}</span> {item.label}
               </Link>
             )
           })}
         </nav>
       </aside>
 
-      {/* Main Content */}
-      <main style={{ marginLeft: 'var(--sidebar-width)', flex: 1, padding: 'clamp(20px, 5vw, 60px)', width: '100%' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px', flexWrap: 'wrap', gap: '20px' }}>
-          <div>
-             <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.22rem)', color: 'var(--navy)', fontWeight: '800' }}>Student Portal</h2>
-             <p style={{ color: 'var(--muted)', marginTop: '4px' }}>Welcome, Ahmad!</p>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ width: '48px', height: '48px', background: 'linear-gradient(135deg, var(--gold), var(--teal))', borderRadius: '14px', color: 'var(--navy)', fontWeight: '900', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>AA</div>
+      {/* Mobile Bar */}
+      <div className="mobile-portal-bar" style={{ display: 'none', position: 'fixed', top: '65px', left: 0, width: '100%', background: 'var(--navy)', color: '#fff', padding: '12px 20px', zIndex: 900, justifyContent: 'space-between', alignItems: 'center' }}>
+         <div style={{ fontSize: '14px', fontWeight: '800' }}>Student Portal</div>
+         <button onClick={() => setSidebarOpen(true)} style={{ color: '#fff' }}>☰ Menu</button>
+      </div>
+
+      <main className="portal-main" style={{ marginLeft: '260px', flex: 1, padding: '40px clamp(20px, 5vw, 60px)' }}>
+        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <div style={{ width: '45px', height: '45px', background: 'linear-gradient(135deg, var(--gold), var(--teal))', borderRadius: '12px', color: 'var(--navy)', fontWeight: '900', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {getInitials(user?.name)}
+            </div>
+            <div className="desktop-only">
+              <div style={{ fontWeight: '800', color: 'var(--navy)' }}>{user?.name}</div>
+              <div style={{ fontSize: '11px', color: 'var(--muted)' }}>Student ID: {user?.username}</div>
+            </div>
           </div>
         </header>
 
         <Routes>
           <Route path="/" element={<StudentDashboard />} />
-          <Route path="/courses" element={<div className="fade-in"><h3>My Courses</h3></div>} />
-          <Route path="/results" element={<div><h3>Results</h3></div>} />
-          <Route path="/schedule" element={<div><h3>Schedule</h3></div>} />
-          <Route path="/profile" element={<div><h3>Profile</h3></div>} />
+          <Route path="/courses" element={<div className="fade-in"><h3>My Courses</h3><p>Course content loading from LMS...</p></div>} />
+          <Route path="/results" element={<div><h3>Results</h3><p>Exam results will be posted here.</p></div>} />
+          <Route path="/schedule" element={<div><h3>Class Schedule</h3><p>Your weekly timetable.</p></div>} />
         </Routes>
       </main>
 
       <style>{`
+        @media (min-width: 1025px) { .student-sidebar { transform: translateX(0) !important; } }
         @media (max-width: 1024px) {
-          aside {
-            transform: translateX(-100%);
-          }
-          .sidebar-toggle {
-            display: flex !important;
-          }
-          main {
-            margin-left: 0 !important;
-          }
+          .portal-main { margin-left: 0 !important; padding-top: 120px !important; }
+          .mobile-portal-bar { display: flex !important; }
+          .desktop-only { display: none !important; }
         }
       `}</style>
     </div>

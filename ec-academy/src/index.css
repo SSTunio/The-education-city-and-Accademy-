@@ -198,3 +198,9 @@ button {
   --sidebar-width: 260px !important;
   transform: translateX(0) !important;
 }
+
+.nav-link-side:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: var(--gold) !important;
+  transform: translateX(4px);
+}
