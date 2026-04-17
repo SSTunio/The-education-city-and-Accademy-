@@ -20,36 +20,39 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login attempt started...");
-    console.log("Role selected:", role);
-    console.log("Username entered:", credentials.username);
     setLoading(true);
     
     try {
-      // Comparison specifically for the admin credentials provided by the user
-      const isAdmin = role === 'admin' && 
-                      credentials.username === 'ethenhuntstark@gmail.com' && 
-                      credentials.password === '@110("ssTunio");';
-      
-      const isStudent = role === 'student' && 
-                        credentials.username === 'student' && 
-                        credentials.password === 'student123';
+      if (role === 'admin') {
+        // Aligned with Report: Using Supabase Auth for Admin
+        const { data, error } = await authService.login({ 
+          email: credentials.username, 
+          password: credentials.password 
+        });
 
-      if (isAdmin) {
-        console.log("Admin verified! Redirecting...");
-        login({ username: 'ethenhuntstark@gmail.com', role: 'admin', name: 'Administrator' });
-        navigate('/admin');
-      } else if (isStudent) {
-        console.log("Student verified! Redirecting...");
-        login({ username: 'student', role: 'student', name: 'Ahmad Ali' });
-        navigate('/student');
+        if (error) {
+          alert(`Login Failed: ${error.message}`);
+        } else if (data.user) {
+          login({ 
+            username: data.user.email, 
+            role: 'admin', 
+            name: 'Administrator',
+            id: data.user.id 
+          });
+          navigate('/admin');
+        }
       } else {
-        console.log("Authentication failed.");
-        alert('Invalid credentials. Please select the correct role (Admin/Student) and check your details.');
+        // Student login (Local fallback for now)
+        if (credentials.username === 'student' && credentials.password === 'student123') {
+          login({ username: 'student', role: 'student', name: 'Ahmad Ali' });
+          navigate('/student');
+        } else {
+          alert('Invalid student credentials. Use student/student123');
+        }
       }
     } catch (error) {
-      console.error('Login process error:', error);
-      alert('An error occurred during login. Please try again.');
+      console.error('Auth error:', error);
+      alert('An unexpected error occurred. Check console.');
     } finally {
       setLoading(false);
     }
@@ -93,7 +96,7 @@ function Login() {
 
         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '20px' }}>
           <div style={{ textAlign: 'left' }}>
-            <label style={{ fontSize: '12px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.4)', marginBottom: '8px', display: 'block', textTransform: 'uppercase', letterSpacing: '1px' }}>Username (Email)</label>
+            <label style={{ fontSize: '12px', fontWeight: '700', color: 'rgba(255, 255, 255, 0.4)', marginBottom: '8px', display: 'block', textTransform: 'uppercase', letterSpacing: '1px' }}>Email Address</label>
             <input 
               type="text" 
               name="username"

@@ -1,70 +1,41 @@
-# Education City & AI Academy 🎓🚀
+# Education City & AI Academy — Technical Portfolio 🎓🚀
 
-A premium, full-stack educational management platform designed for **The Education City and AI Academy**. This project features a modern, mobile-responsive web portal for students and a robust administrative control center for academy management.
+This project follows the **Decoupled Architecture** strategy for a professional educational portal, integrating a high-performance frontend with a managed Backend-as-a-Service (BaaS).
 
-## ✨ Features
+## 1. High-Level Architecture
+The platform follows a modern decoupled architecture:
+- **Frontend**: A high-performance React 19 Single Page Application (SPA).
+- **Backend-as-a-Service (BaaS)**: Managed services via **Supabase** for database, authentication, and security policies.
+- **Secondary Microservice**: A Python-based FastAPI service for complex logic and AI research demonstrations.
 
-### 🌐 Frontend (React + Vite)
-- **Stunning Aesthetics**: Premium dark-mode themed design with Glassmorphism and gold accents.
-- **Responsive Layout**: Fully optimized for Desktop, Tablet, and Mobile devices.
-- **Dynamic Course Grid**: Real-time course listings grouped by Weekday and Weekend programs.
-- **Student Portal**: Secure dashboard for students to track progress and results.
-- **Floating WhatsApp Integration**: Instant one-click communication for potential students.
+## 2. Frontend (The Interface)
+- **Framework**: React 19 + Vite 5
+- **Styling**: Vanilla CSS with Glassmorphism and modern Theme Engine tokens.
+- **Deployment**: Google Firebase Hosting
+- **Hosting URL**: [https://education-city-and-ai-academy.web.app](https://education-city-and-ai-academy.web.app)
+- **Mechanism**: Compiled into optimized static assets in the `dist/` folder and deployed to Google’s Global CDN.
 
-### 🛡️ Admin Portal
-- **Course Management**: Full CRUD capabilities to manage titles, instructors, and schedules.
-- **Student Management**: Monitor registrations and approval statuses.
-- **Analytics Dashboard**: Real-time statistics on student growth and active programs.
-- **Secure Access**: Protected login for administrators.
+## 3. Backend (The Logic & Data)
+### Primary Backend: Supabase (BaaS)
+- **Database**: PostgreSQL storing courses, announcements, and registrations.
+- **Authentication**: Supabase Auth securing the Admin Dashboard via JWT.
+- **Client Communication**: Direct browser-to-DB communication via `@supabase/supabase-js`.
+- **Security**: Enforced via **Row Level Security (RLS)** policies.
 
-### ⚙️ Backend (FastAPI + Supabase)
-- **Cloud Database**: Powered by Supabase for high availability and real-time updates.
-- **RESTful API**: Clean, structured endpoints for data management.
-- **Secure Environment**: Environment-variable based configuration.
+### Secondary Backend: Python AI Labs
+- **Framework**: FastAPI (Python)
+- **Purpose**: Dedicated environment for AI reasoning and backend data processing.
+- **Location**: `/ec-backend/`
 
-## 📍 Location & Contact
-- **Address**: Mir Pado, Tando Jam, Pakistan
-- **WhatsApp**: +92 312 6741558
-- **Email**: ethenhuntstark@gmail.com
-- **Timings**: 
-  - Weekday: 2:00 PM - 9:00 PM
-  - Weekend: 9:00 AM - 12:00 PM
+## 4. Deployment Workflow
+1. **Build**: `npm run build` (Compiles and optimizes assets).
+2. **Environment**: `.env` loads Supabase credentials securely.
+3. **Deploy**: `firebase deploy` (Pushes new versions live instantly).
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js & npm
-- Python 3.10+
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/SSTunio/The-education-city-and-Accademy-.git
-   cd The-education-city-and-Accademy-
-   ```
-
-2. **Backend Setup**
-   ```bash
-   cd ec-backend
-   python -m venv venv
-   source venv/bin/activate # or .\venv\Scripts\activate on Windows
-   pip install -r requirements.txt
-   python main.py
-   ```
-
-3. **Frontend Setup**
-   ```bash
-   cd ec-academy
-   npm install
-   npm run dev
-   ```
-
-## 🛠️ Technology Stack
-- **Frontend**: React.js, Vite, Vanilla CSS (Glassmorphism)
-- **Backend**: FastAPI (Python)
-- **Database**: Supabase (PostgreSQL)
-- **Deployment**: Production-ready configuration included.
+## 5. Security Summary
+- **JWT Security**: Admin access is strictly governed by Supabase Auth tokens.
+- **RLS Policies**: Ensures public users can only read course data, while only authenticated Admins can modify the database.
+- **HTTPS**: Globally enforced by Firebase Hosting SSL.
 
 ---
-© 2026 Education City & AI Academy · Build with ❤️ for Future Leaders.
+© 2026 Education City & AI Academy · Building the Future of Tech Education.

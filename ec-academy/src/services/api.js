@@ -1,15 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Hardcoding for production reliability
+// Hardcoded for production reliability (as per report strategy)
 const supabaseUrl = 'https://xfdemqvbdzlshavbdlna.supabase.co';
 const supabaseKey = 'sb_publishable_bCiLGQ3zUp8TeMF-muZvCw_qUh2jLLj';
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Auth Service
+// Auth Service (Aligned with Portfolio Report - using Supabase Auth)
 export const authService = {
-  login: async ({ username, password }) => {
-    return { data: { user: { username } } }; 
+  login: async ({ email, password }) => {
+    // Uses real Supabase JWT Authentication
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    return { data, error };
   },
   register: async (studentData) => {
     return supabase.table('registrations').insert({
@@ -20,9 +25,16 @@ export const authService = {
       created_at: new Date().toISOString()
     });
   },
+  logout: async () => {
+    return supabase.auth.signOut();
+  },
+  getCurrentUser: async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    return user;
+  }
 };
 
-// Academy Service
+// Academy Service (Direct BaaS Communication)
 export const academyService = {
   getStats: async () => {
     return { data: { students: 320, programs: 2, courses: 9, pass_rate: '95%', trainers: 6 } };
