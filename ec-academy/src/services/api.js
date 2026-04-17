@@ -1,49 +1,55 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Hardcoded for production reliability (as per report strategy)
+// Hardcoded for absolute reliability
 const supabaseUrl = 'https://xfdemqvbdzlshavbdlna.supabase.co';
 const supabaseKey = 'sb_publishable_bCiLGQ3zUp8TeMF-muZvCw_qUh2jLLj';
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Auth Service (Aligned with Portfolio Report - using Supabase Auth)
+// Helper for more descriptive error logging
+const handleSupabaseError = (res, context) => {
+  if (res.error) {
+    console.error(`Supabase Error [${context}]:`, res.error);
+    return { 
+      error: true, 
+      message: res.error.message || 'Unknown Database Error'
+    };
+  }
+  return { error: false, data: res.data };
+};
+
+// Auth Service
 export const authService = {
   login: async ({ email, password }) => {
-    // Uses real Supabase JWT Authentication
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    return { data, error };
+    return await supabase.auth.signInWithPassword({ email, password });
   },
   register: async (studentData) => {
-    return supabase.table('registrations').insert({
+    const res = await supabase.from('registrations').insert({
       student_name: studentData.name,
       course: studentData.course,
       program_type: studentData.program,
       status: 'pending',
       created_at: new Date().toISOString()
     });
+    return handleSupabaseError(res, 'Register');
   },
   logout: async () => {
     return supabase.auth.signOut();
-  },
-  getCurrentUser: async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    return user;
   }
 };
 
-// Academy Service (Direct BaaS Communication)
+// Academy Service (Corrected to use .from() instead of .table())
 export const academyService = {
   getStats: async () => {
     return { data: { students: 320, programs: 2, courses: 9, pass_rate: '95%', trainers: 6 } };
   },
   getAnnouncements: async () => {
-    return supabase.table('announcements').select('*').order('created_at', { ascending: false }).limit(5);
+    const res = await supabase.from('announcements').select('*').order('created_at', { ascending: false }).limit(5);
+    return handleSupabaseError(res, 'GetAnnouncements');
   },
   getCourses: async () => {
-    return supabase.table('courses').select('*').order('program_type', { ascending: false }).order('created_at', { ascending: false });
+    const res = await supabase.from('courses').select('*').order('program_type', { ascending: false }).order('created_at', { ascending: false });
+    return handleSupabaseError(res, 'GetCourses');
   },
   addCourse: async (courseData) => {
     const payload = {
@@ -56,14 +62,17 @@ export const academyService = {
       status: courseData.status
     };
     
+    let res;
     if (courseData.id) {
-      return supabase.table('courses').update(payload).eq('id', courseData.id);
+      res = await supabase.from('courses').update(payload).eq('id', courseData.id);
     } else {
-      return supabase.table('courses').insert(payload);
+      res = await supabase.from('courses').insert(payload);
     }
+    return handleSupabaseError(res, 'AddCourse');
   },
   deleteCourse: async (id) => {
-    return supabase.table('courses').delete().eq('id', id);
+    const res = await supabase.from('courses').delete().eq('id', id);
+    return handleSupabaseError(res, 'DeleteCourse');
   },
 };
 

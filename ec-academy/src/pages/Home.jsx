@@ -54,33 +54,58 @@ const CourseCard = ({ track, title, meta, price, color, programType }) => (
 );
 
 function Home() {
-  const context = useApp();
-  const { stats = {}, setAnnouncements } = context || {};
+  const context = useApp() || {};
+  const { setAnnouncements } = context;
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const anncRes = await academyService.getAnnouncements();
-        setAnnouncements(anncRes.data);
+        console.log("Fetching live data from Supabase...");
+        
+        // Fetch Announcements
+        const anncRes = await academyService.getAnnouncements().catch(e => ({ error: e }));
+        if (anncRes && anncRes.data && setAnnouncements) {
+          setAnnouncements(anncRes.data);
+        }
 
-        const courseRes = await academyService.getCourses();
-        if (courseRes.data && courseRes.data.length > 0) {
-          const mapped = courseRes.data.map(c => ({
-            id: c.id,
-            track: c.track,
-            title: c.name,
-            programType: c.program_type,
-            meta: `Guided by ${c.trainer || 'Industry Experts'}`,
-            price: c.duration || 'Session Based',
-            color: c.track === 'Advanced' ? '#e63946' : (c.track === 'Intermediate' ? '#f5a623' : '#00c9a7')
-          }));
+        // Fetch Courses
+        const courseRes = await academyService.getCourses().catch(e => ({ error: e }));
+        console.log("Supabase Response:", courseRes);
+
+        if (courseRes && courseRes.error) {
+          throw new Error(courseRes.error.message || "Database connection error");
+        }
+
+        if (courseRes && courseRes.data && Array.isArray(courseRes.data)) {
+          const mapped = courseRes.data
+            .filter(c => c !== null) // Safety check
+            .map(c => {
+              const pType = c.program_type || 'Weekday';
+              const normalizedType = pType.charAt(0).toUpperCase() + pType.slice(1).toLowerCase();
+              
+              return {
+                id: c.id,
+                track: c.track || 'General',
+                title: c.name || 'Untitled Course',
+                programType: normalizedType,
+                meta: `Guided by ${c.trainer || 'Industry Experts'}`,
+                price: c.duration || 'Session Based',
+                color: c.track === 'Advanced' ? '#e63946' : (c.track === 'Intermediate' ? '#f5a623' : '#00c9a7')
+              };
+            });
           setCourses(mapped);
         } else {
-          setCourses(defaultTracks.map(c => ({...c, title: c.title, price: c.price})));
+          console.warn("No data returned. Using defaults.");
+          setCourses(defaultTracks.map(c => ({...c, programType: c.programType || 'Weekday'})));
         }
-      } catch (error) {
+      } catch (err) {
+        console.error("Critical Fetch Error:", err);
+        setError(err.message);
         setCourses(defaultTracks);
       } finally {
         setLoading(false);
@@ -89,8 +114,9 @@ function Home() {
     fetchData();
   }, []);
 
-  const weekdayCourses = courses.filter(c => c.programType === 'Weekday');
-  const weekendCourses = courses.filter(c => c.programType === 'Weekend');
+  // Filter with normalization
+  const weekdayCourses = courses.filter(c => (c.programType || '').toLowerCase() === 'weekday');
+  const weekendCourses = courses.filter(c => (c.programType || '').toLowerCase() === 'weekend');
 
   return (
     <div className="home-page">
@@ -120,36 +146,55 @@ function Home() {
         </div>
       </section>
 
+      {/* Debug Error Message */}
+      {error && (
+        <div style={{ background: '#fee2e2', color: '#991b1b', padding: '15px', textAlign: 'center', fontSize: '14px', borderBottom: '1px solid #fecaca', zIndex: 1000, position: 'relative' }}>
+          ⚠️ Database Sync: {error}. Using local backup.
+        </div>
+      )}
+
       {/* Programs Grid */}
       <section id="programs" className="section" style={{ background: '#fcfcfd' }}>
         <div className="container">
           
-          {/* Weekday Programs */}
-          <div style={{ marginBottom: '80px' }}>
-            <div style={{ marginBottom: '40px' }}>
-              <div style={{ color: 'var(--teal)', fontWeight: '800', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '8px' }}>Weekday: 2 PM to 9 PM</div>
-              <h2 style={{ fontSize: '2.2rem', color: 'var(--navy)' }}>Weekday Programs</h2>
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '100px 0', color: 'var(--muted)' }}>
+              Loading Specialized Tracks...
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '30px' }}>
-              {weekdayCourses.map((course, index) => (
-                <CourseCard key={index} {...course} />
-              ))}
-            </div>
-          </div>
+          ) : (
+            <>
+              {/* Weekday Programs */}
+              <div style={{ marginBottom: '80px' }}>
+                <div style={{ marginBottom: '40px' }}>
+                  <div style={{ color: 'var(--teal)', fontWeight: '800', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '8px' }}>Weekday: 2 PM to 9 PM</div>
+                  <h2 style={{ fontSize: '2.2rem', color: 'var(--navy)' }}>Weekday Programs</h2>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '30px' }}>
+                  {weekdayCourses.length > 0 ? (
+                    weekdayCourses.map((course, index) => <CourseCard key={index} {...course} />)
+                  ) : (
+                    <div style={{ color: 'var(--muted)', fontSize: '14px' }}>No weekday courses currently available.</div>
+                  )}
+                </div>
+              </div>
 
-          {/* Weekend Programs */}
-          <div>
-            <div style={{ marginBottom: '40px' }}>
-              <div style={{ color: 'var(--gold)', fontWeight: '800', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '8px' }}>Weekend: 9 AM to 12 PM</div>
-              <h2 style={{ fontSize: '2.2rem', color: 'var(--navy)' }}>Weekend Specials</h2>
-              <p style={{ color: 'var(--muted)', marginTop: '8px' }}>Target: Middle School to Matriculation Level</p>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '30px' }}>
-              {weekendCourses.map((course, index) => (
-                <CourseCard key={index} {...course} />
-              ))}
-            </div>
-          </div>
+              {/* Weekend Programs */}
+              <div>
+                <div style={{ marginBottom: '40px' }}>
+                  <div style={{ color: 'var(--gold)', fontWeight: '800', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '8px' }}>Weekend: 9 AM to 12 PM</div>
+                  <h2 style={{ fontSize: '2.2rem', color: 'var(--navy)' }}>Weekend Specials</h2>
+                  <p style={{ color: 'var(--muted)', marginTop: '8px' }}>Target: Middle School to Matriculation Level</p>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '30px' }}>
+                  {weekendCourses.length > 0 ? (
+                    weekendCourses.map((course, index) => <CourseCard key={index} {...course} />)
+                  ) : (
+                    <div style={{ color: 'var(--muted)', fontSize: '14px' }}>No weekend courses currently available.</div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
 
         </div>
       </section>
@@ -187,7 +232,6 @@ function Home() {
             </div>
             
             <div style={{ height: '450px', borderRadius: '32px', overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.1)', border: '8px solid #fff' }}>
-              {/* Refined Google Maps embed with specific search query and marker */}
               <iframe 
                 src="https://maps.google.com/maps?q=Mir%20Pado%20Tando%20Jam&t=&z=15&ie=UTF8&iwloc=&output=embed" 
                 width="100%" 

@@ -10,15 +10,15 @@ import AdminPortal from './pages/AdminPortal';
 import NotFound from './pages/NotFound';
 
 function App() {
-  console.log("App component rendering...");
+  console.log("App component rendering v1.1...");
   
   return (
     <Router>
       <div className="app-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Navbar />
-        {/* Simple Debug Marker */}
-        <div style={{ background: 'var(--gold)', color: 'var(--navy)', textAlign: 'center', fontSize: '10px', padding: '2px', fontWeight: 'bold' }}>
-          EDUCATION CITY ACADEMY v1.0 • SYSTEM ACTIVE
+        {/* Version Marker for Cache Verification */}
+        <div style={{ background: 'var(--navy)', color: 'var(--gold)', textAlign: 'center', fontSize: '10px', padding: '4px', fontWeight: 'bold', borderBottom: '1px solid rgba(245, 166, 35, 0.2)' }}>
+          EDUCATION CITY ACADEMY v1.1 • PRODUCTION READY • DIRECT SYNC ACTIVE
         </div>
         
         <main className="main-content" style={{ flex: 1 }}>
